@@ -42,3 +42,9 @@
 
 ## ERD
 <img width="1289" alt="image" src="https://github.com/Nokchamat/oneTwoClass/assets/107979129/e5f1b8af-c021-4a60-b4eb-bf8a82f10b30">
+
+## Trouble Shooting
+[Trouble Shooting Page][link]
+
+[link]: https://github.com/Nokchamat/oneTwoClass/blob/main/TROUBLE_SHOOTING.md
+
