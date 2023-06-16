@@ -37,4 +37,4 @@
 - [ ] 클래스 즐겨찾기 등록
 
 ## ERD
-https://www.erdcloud.com/d/g3maFWm7qAA46JCHt
+<img width="1289" alt="image" src="https://github.com/Nokchamat/oneTwoClass/assets/107979129/e5f1b8af-c021-4a60-b4eb-bf8a82f10b30">
