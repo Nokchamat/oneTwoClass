@@ -15,7 +15,6 @@
 - MySQL
 - GitHub
 - H2 - test용
-- Lombok
 
 ## 기능
 
