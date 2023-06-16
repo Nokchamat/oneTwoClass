@@ -35,3 +35,6 @@
 - [ ] 클래스 예약 요청
 - [ ] 스토어 즐겨찾기 등록
 - [ ] 클래스 즐겨찾기 등록
+
+## ERD
+https://www.erdcloud.com/d/g3maFWm7qAA46JCHt
