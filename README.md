@@ -19,7 +19,7 @@
 ## 기능
 
 ### 공통
-- [ ] 회원가입 기능 구현
+- [x] 회원가입 기능 구현
 - [ ] 로그인 기능 구현
 - [ ] 채팅
 - [ ] 공지사항 조회
@@ -41,7 +41,8 @@
 - [ ] 리뷰 평균 별점
 
 ## ERD
-![image](https://github.com/Nokchamat/oneTwoClass/assets/107979129/adca80df-bcd0-4f80-a274-4720aae71a1d)
+![image](https://github.com/Nokchamat/oneTwoClass/assets/107979129/a66126f2-e503-48e1-a50b-7e94a9211b9c)
+
 
 ## Trouble Shooting
 [Trouble Shooting Page][link]
