@@ -23,7 +23,7 @@ public class Schedule {
 
   private Boolean acceptYn;
 
-  private LocalDateTime registeredAt;
+  private LocalDateTime requestedDateTime;
 
   @ManyToOne
   @JoinColumn(name = "day_class_scheduler")
