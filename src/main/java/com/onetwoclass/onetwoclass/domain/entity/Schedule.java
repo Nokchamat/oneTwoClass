@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
@@ -12,23 +12,25 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class DayClass {
+public class Schedule {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String dayClassName;
+  private Boolean acceptYn;
 
-  private Integer price;
-
-  private LocalDateTime registeredAt;
+  private LocalDateTime requestedDateTime;
 
   @ManyToOne
-  @JoinColumn(name = "store_id")
-  private Store store;
+  @JoinColumn(name = "day_class_scheduler")
+  private DayClassScheduler dayClassScheduler;
+
+  @ManyToOne
+  @JoinColumn(name = "customer_id")
+  private Member customerId;
 
 }

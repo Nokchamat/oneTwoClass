@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

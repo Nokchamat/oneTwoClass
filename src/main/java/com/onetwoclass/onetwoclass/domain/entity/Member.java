@@ -1,6 +1,7 @@
-package com.onetwoclass.onetwoclass.domain;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import com.onetwoclass.onetwoclass.domain.constants.Role;
+import com.onetwoclass.onetwoclass.domain.dto.MemberSignInDto;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +10,17 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-public class User {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class Member {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +41,14 @@ public class User {
   private LocalDateTime registeredAt;
 
   private LocalDateTime modifiedAt;
+
+  public static MemberSignInDto toMemberSignInDto(Member member) {
+
+    return MemberSignInDto.builder()
+        .email(member.email)
+        .password(member.password)
+        .role(member.role)
+        .build();
+  }
 
 }

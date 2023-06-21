@@ -1,11 +1,10 @@
-package com.onetwoclass.onetwoclass.domain;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -13,26 +12,23 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Chatting {
+@NoArgsConstructor
+@Builder
+public class DayClass {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Lob
-  private String text;
+  private String dayClassName;
 
-  @ManyToOne
-  @JoinColumn(name = "customer_id")
-  private User customer;
-
-  @ManyToOne
-  @JoinColumn(name = "seller_id")
-  private User seller;
+  private Integer price;
 
   private LocalDateTime registeredAt;
+
+  @ManyToOne
+  @JoinColumn(name = "store_id")
+  private Store store;
 
 }
