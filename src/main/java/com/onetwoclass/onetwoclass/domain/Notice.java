@@ -6,10 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class Notice {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Lob
   private String text;
 
   private LocalDateTime registeredAt;
