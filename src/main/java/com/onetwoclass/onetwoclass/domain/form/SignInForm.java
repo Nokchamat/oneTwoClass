@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public class SignInForm {
 
+  @Email
   private String email;
 
   private String password;
