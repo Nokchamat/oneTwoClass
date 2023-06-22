@@ -36,10 +36,8 @@ public class MemberService {
   public String signIn(SignInForm signInForm) {
 
     //Todo Custom Exception 구현 필요
-    MemberSignInDto memberSignInDto = Member.toMemberSignInDto(
-        userRepository.findByEmail(signInForm.getEmail())
-            .orElseThrow(() -> new RuntimeException("유저가 없습니다."))
-    );
+    Member member = userRepository.findByEmail(signInForm.getEmail())
+            .orElseThrow(() -> new RuntimeException("유저가 없습니다."));
 
     if (!memberSignInDto.getPassword().equals(signInForm.getPassword())) {
       throw new RuntimeException("비밀번호가 일치하지 않습니다.");
