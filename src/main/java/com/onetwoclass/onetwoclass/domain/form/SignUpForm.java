@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class SignUpForm {
 
+  @Email
   private String email;
 
   private String name;
