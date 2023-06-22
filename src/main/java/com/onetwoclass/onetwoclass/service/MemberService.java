@@ -17,6 +17,9 @@ public class MemberService {
 
   public void signUp(SignUpForm signUpForm) {
 
+    userRepository.findByEmail(signUpForm.getEmail())
+            .ifPresent(a -> new RuntimeException("이미 계정이 존재합니다."));
+
     userRepository.save(Member.builder()
         .email(signUpForm.getEmail())
         .name(signUpForm.getName())
