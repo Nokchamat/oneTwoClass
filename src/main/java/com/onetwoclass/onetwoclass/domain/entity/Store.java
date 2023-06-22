@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import javax.persistence.Entity;
@@ -34,7 +34,7 @@ public class Store {
 
   @OneToOne
   @JoinColumn(name = "seller_id")
-  private User seller;
+  private Member seller;
 
 
 }

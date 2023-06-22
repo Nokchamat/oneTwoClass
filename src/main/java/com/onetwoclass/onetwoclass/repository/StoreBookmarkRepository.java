@@ -1,6 +1,6 @@
 package com.onetwoclass.onetwoclass.repository;
 
-import com.onetwoclass.onetwoclass.domain.StoreBookmark;
+import com.onetwoclass.onetwoclass.domain.entity.StoreBookmark;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

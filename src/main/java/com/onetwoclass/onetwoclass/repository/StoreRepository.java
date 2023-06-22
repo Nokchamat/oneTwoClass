@@ -1,6 +1,6 @@
 package com.onetwoclass.onetwoclass.repository;
 
-import com.onetwoclass.onetwoclass.domain.Store;
+import com.onetwoclass.onetwoclass.domain.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DayClassBookmark {
+public class StoreBookmark {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,10 @@ public class DayClassBookmark {
 
   @ManyToOne
   @JoinColumn(name = "customer_id")
-  private User customer;
+  private Member customer;
 
   @ManyToOne
-  @JoinColumn(name = "day_class_id")
-  private DayClass dayClass;
+  @JoinColumn(name = "store_id")
+  private Store store;
 
 }
