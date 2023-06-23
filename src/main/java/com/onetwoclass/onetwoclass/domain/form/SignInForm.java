@@ -1,5 +1,6 @@
 package com.onetwoclass.onetwoclass.domain.form;
 
+import javax.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 

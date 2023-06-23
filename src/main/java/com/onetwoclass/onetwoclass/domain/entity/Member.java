@@ -1,7 +1,6 @@
 package com.onetwoclass.onetwoclass.domain.entity;
 
 import com.onetwoclass.onetwoclass.domain.constants.Role;
-import com.onetwoclass.onetwoclass.domain.dto.MemberSignInDto;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,14 +40,5 @@ public class Member {
   private LocalDateTime registeredAt;
 
   private LocalDateTime modifiedAt;
-
-  public static MemberSignInDto toMemberSignInDto(Member member) {
-
-    return MemberSignInDto.builder()
-        .email(member.email)
-        .password(member.password)
-        .role(member.role)
-        .build();
-  }
 
 }

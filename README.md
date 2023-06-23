@@ -41,8 +41,7 @@
 - [ ] 리뷰 평균 별점
 
 ## ERD
-![image](https://github.com/Nokchamat/oneTwoClass/assets/107979129/a66126f2-e503-48e1-a50b-7e94a9211b9c)
-
+![img_1.png](img_1.png)
 
 ## Trouble Shooting
 [Trouble Shooting Page][link]
