@@ -20,7 +20,6 @@ public class SecurityConfiguration {
 
   private final JwtTokenProvider jwtTokenProvider;
 
-  //  @Override
   @Bean
   protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -48,8 +47,6 @@ public class SecurityConfiguration {
     return httpSecurity.build();
   }
 
-  //테스트의 원활함을 위해 ignore 설정
-//  @Override
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return (web) -> web.ignoring().antMatchers("/api/v1/member/signin", "/api/v1/member/signup");
