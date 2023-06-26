@@ -2,7 +2,6 @@ package com.onetwoclass.onetwoclass.controller;
 
 import com.onetwoclass.onetwoclass.domain.form.SignInForm;
 import com.onetwoclass.onetwoclass.domain.form.SignUpForm;
-import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.CustomValidationException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.service.MemberService;
@@ -36,11 +35,11 @@ public class MemberController {
     return ResponseEntity.ok(signUpForm.getName() + "님의 회원가입이 완료되었습니다.");
   }
 
+
   @PostMapping("/signin")
   ResponseEntity<?> signIn(@RequestBody @Validated SignInForm signInForm) {
 
     return ResponseEntity.ok(userService.signIn(signInForm));
   }
-
 
 }

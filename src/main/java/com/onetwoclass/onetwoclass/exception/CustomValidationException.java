@@ -26,6 +26,7 @@ public class CustomValidationException extends RuntimeException {
   @NoArgsConstructor
   @Getter
   public static class CustomValidationExceptionResponse {
+
     private int httpStatus;
     private String errorCode;
     private String detailMessage;

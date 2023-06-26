@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.BindingResult;
 
 @Getter
 public class CustomException extends RuntimeException {
@@ -22,7 +21,8 @@ public class CustomException extends RuntimeException {
   @Builder
   @NoArgsConstructor
   @Getter
-  public static class CustomExceptionResponse{
+  public static class CustomExceptionResponse {
+
     private int httpStatus;
     private String errorCode;
     private String detailMessage;

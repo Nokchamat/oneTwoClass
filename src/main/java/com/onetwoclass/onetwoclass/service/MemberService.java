@@ -1,5 +1,6 @@
 package com.onetwoclass.onetwoclass.service;
 
+import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.SignInForm;
 import com.onetwoclass.onetwoclass.domain.form.SignUpForm;
@@ -18,6 +19,7 @@ public class MemberService {
 
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
+  private final JwtTokenProvider jwtTokenProvider;
 
   @Transactional
   public void signUp(SignUpForm signUpForm) {
@@ -51,7 +53,7 @@ public class MemberService {
       throw new CustomException(ErrorCode.MISMATCHED_PASSWORD_AND_ID);
     }
 
-    return "token";
+    return jwtTokenProvider.createToken(String.valueOf(member.getEmail()), member.getRole());
   }
 
 }
