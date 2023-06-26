@@ -57,12 +57,12 @@ public class JwtTokenProvider {
 
   public Authentication getAuthentication(String token) {
     Member member = memberRepository.findByEmail(getMemberEmail(token))
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUNT_MEMBER));
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
     Collection<GrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getRole().toString()));
+    authorities.add(new SimpleGrantedAuthority(member.getRole().getDetail()));
 
-    return new UsernamePasswordAuthenticationToken("member", "", authorities);
+    return new UsernamePasswordAuthenticationToken(member, "", authorities);
   }
 
   public String getMemberEmail(String token) {
