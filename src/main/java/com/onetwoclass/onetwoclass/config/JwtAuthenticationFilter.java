@@ -20,7 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
-    log.info("======= JwtAuthenticationFilter 동작 =======");
+    log.debug("======= JwtAuthenticationFilter 동작 =======");
 
     String token = jwtTokenProvider.resolveToken(request);
     log.info("token 인증 시작 : {} ", token);
@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       log.info("token 인증 완료 : {} ", token);
     }
 
-    log.info("======= JwtAuthenticationFilter 완료 =======");
+    log.debug("======= JwtAuthenticationFilter 완료 =======");
     filterChain.doFilter(request, response);
   }
 }
