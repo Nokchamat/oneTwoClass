@@ -31,11 +31,8 @@ public class SecurityConfiguration {
 
         .and()
         .authorizeRequests()
-//        .antMatchers("/signup", "/signin")
-//        .permitAll()
-
-        .antMatchers("/store")
-        .hasRole(Role.SELLER.toString())
+        .antMatchers("/api/v1/store/**").hasRole(Role.SELLER.toString())
+        .antMatchers("/api/v1/member/signup", "/api/v1/member/signin").permitAll()
 
         .and()
         .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
@@ -48,10 +45,5 @@ public class SecurityConfiguration {
 
     return httpSecurity.build();
   }
-
-//  @Bean
-//  public WebSecurityCustomizer webSecurityCustomizer() {
-//    return (web) -> web.ignoring().antMatchers("/api/v1/member/signin", "/api/v1/member/signup");
-//  }
 
 }
