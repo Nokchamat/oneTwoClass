@@ -47,7 +47,7 @@ public class MemberService {
   public String signIn(SignInForm signInForm) {
 
     Member member = memberRepository.findByEmail(signInForm.getEmail())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUNT_MEMBER));
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
     if (!passwordEncoder.matches(signInForm.getPassword(), member.getPassword())) {
       throw new CustomException(ErrorCode.MISMATCHED_PASSWORD_AND_ID);

@@ -1,6 +1,7 @@
 package com.onetwoclass.onetwoclass.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -31,12 +32,12 @@ class MemberServiceTest {
 
   @Test
   @DisplayName("회원가입 성공")
-  void signUpTest() {
+  void Success_signUp() {
     //given
     SignUpForm signUpForm = SignUpForm.builder()
-        .email("testemail2@naver.com")
+        .email("Success_signUp@test.com")
         .name("홍길동")
-        .password("1234")
+        .password("12345678")
         .phone("010-1234-1234")
         .role(Role.CUSTOMER)
         .build();
@@ -46,7 +47,7 @@ class MemberServiceTest {
 
     //then
     Member user = memberRepository.findByEmail(signUpForm.getEmail())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUNT_MEMBER));
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
     assertEquals(signUpForm.getEmail(), user.getEmail());
     assertEquals(signUpForm.getName(), user.getName());
@@ -58,12 +59,12 @@ class MemberServiceTest {
 
   @Test
   @DisplayName("회원가입 실패 - 이메일 중복")
-  void signUpFailSameEmailTest() {
+  void Fail_signUp_SameEmailTest() {
     //given
     SignUpForm signUpForm = SignUpForm.builder()
-        .email("testemail3@naver.com")
+        .email("Fail_signUp_SameEmailTest@tset.com")
         .name("홍길동")
-        .password("1234")
+        .password("12345678")
         .phone("010-1234-1234")
         .role(Role.CUSTOMER)
         .build();
@@ -81,28 +82,70 @@ class MemberServiceTest {
 
   @Test
   @DisplayName("로그인 성공")
-  void signInTest() {
+  void Success_signIn() {
     //given
     SignUpForm signUpForm = SignUpForm.builder()
-        .email("testemail@naver.com")
+        .email("Success_signIn@test.com")
         .name("홍길동")
-        .password("1234")
+        .password("12345678")
         .phone("010-1234-1234")
         .role(Role.CUSTOMER)
         .build();
     memberService.signUp(signUpForm);
 
     SignInForm signInForm = SignInForm.builder()
-        .email("testemail@naver.com")
-        .password("1234")
+        .email(signUpForm.getEmail())
+        .password(signUpForm.getPassword())
         .build();
 
     //when
     String token = memberService.signIn(signInForm);
 
     //then
-    assertEquals("token", token);
+    assertNotNull(token);
+  }
 
+  @Test
+  @DisplayName("로그인 실패 - 멤버 없음")
+  void Fail_signUp_NotFoundMember() {
+    //given
+    SignInForm signInForm = SignInForm.builder()
+        .email("Fail_signUp_NotFoundMember@test.com")
+        .password("12345678")
+        .build();
+
+    //when
+    //then
+    CustomException customException = assertThrows(
+        CustomException.class, () -> memberService.signIn(signInForm));
+
+    assertEquals(customException.getErrorCode(), ErrorCode.NOT_FOUND_MEMBER);
+  }
+
+  @Test
+  @DisplayName("로그인 실패 - 비밀번호 틀림")
+  void Fail_signUp_MismatchedPasswordAndId() {
+    //given
+    SignUpForm signUpForm = SignUpForm.builder()
+        .email("Fail_signUp_MismatchedPasswordAndId@test.com")
+        .name("홍길동")
+        .password("12345678")
+        .phone("010-1234-1234")
+        .role(Role.CUSTOMER)
+        .build();
+    memberService.signUp(signUpForm);
+
+    SignInForm signInForm = SignInForm.builder()
+        .email(signUpForm.getEmail())
+        .password("12345678910")
+        .build();
+
+    //when
+    CustomException customException = assertThrows(
+        CustomException.class, () -> memberService.signIn(signInForm));
+
+    //then
+    assertEquals(customException.getErrorCode(), ErrorCode.MISMATCHED_PASSWORD_AND_ID);
   }
 
 }
