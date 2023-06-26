@@ -23,7 +23,7 @@ public class StoreController {
   private final StoreService storeService;
   private final JwtTokenProvider jwtTokenProvider;
 
-  @PostMapping("/add")
+  @PostMapping
   ResponseEntity<?> addStore(@RequestBody AddStoreForm addStoreForm,
       HttpServletRequest request) {
 
@@ -33,7 +33,7 @@ public class StoreController {
     return ResponseEntity.ok("상점 등록이 완료되었습니다.");
   }
 
-  @PutMapping("/update")
+  @PutMapping
   ResponseEntity<?> updateStore(@RequestBody UpdateStoreForm updateStoreForm,
       HttpServletRequest request) {
 
@@ -44,7 +44,7 @@ public class StoreController {
     return ResponseEntity.ok("상점 정보 수정이 완료되었습니다.");
   }
 
-  @GetMapping("/get")
+  @GetMapping
   ResponseEntity<?> getStore(HttpServletRequest request) {
 
     return ResponseEntity.ok(storeService
@@ -52,7 +52,7 @@ public class StoreController {
             jwtTokenProvider.resolveToken(request))));
   }
 
-  @DeleteMapping("/delete")
+  @DeleteMapping
   ResponseEntity<?> deleteStore(HttpServletRequest request) {
 
     storeService.deleteStore(
