@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain.form;
+package com.onetwoclass.onetwoclass.domain.form.store;
 
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import lombok.Builder;

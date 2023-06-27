@@ -3,8 +3,8 @@ package com.onetwoclass.onetwoclass.service;
 import com.onetwoclass.onetwoclass.domain.dto.StoreDto;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Store;
-import com.onetwoclass.onetwoclass.domain.form.AddStoreForm;
-import com.onetwoclass.onetwoclass.domain.form.UpdateStoreForm;
+import com.onetwoclass.onetwoclass.domain.form.store.AddStoreForm;
+import com.onetwoclass.onetwoclass.domain.form.store.UpdateStoreForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
@@ -30,7 +30,7 @@ public class StoreService {
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
-    storeRepository.findById(member.getId())
+    storeRepository.findBySellerId(member.getId())
         .ifPresent(
             s -> {
               throw new CustomException(ErrorCode.ALREADY_EXIST_STORE);
@@ -77,10 +77,9 @@ public class StoreService {
     Store store = storeRepository.findBySellerId(member.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassRepository.findByStoreId(store.getId())
-        .ifPresent(s -> {
-          throw new CustomException(ErrorCode.PLEASE_DELETE_DAYONECLASS_FIRST);
-        });
+    if (!dayClassRepository.findByStoreId(store.getId()).isEmpty()) {
+      throw new CustomException(ErrorCode.PLEASE_DELETE_DAYCLASS_FIRST);
+    }
 
     storeRepository.delete(store);
   }

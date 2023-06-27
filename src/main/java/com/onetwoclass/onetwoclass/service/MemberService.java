@@ -2,8 +2,8 @@ package com.onetwoclass.onetwoclass.service;
 
 import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
-import com.onetwoclass.onetwoclass.domain.form.SignInForm;
-import com.onetwoclass.onetwoclass.domain.form.SignUpForm;
+import com.onetwoclass.onetwoclass.domain.form.sign.SignInForm;
+import com.onetwoclass.onetwoclass.domain.form.sign.SignUpForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;

@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain.form;
+package com.onetwoclass.onetwoclass.domain.form.sign;
 
 import javax.validation.constraints.Email;
 import lombok.Builder;

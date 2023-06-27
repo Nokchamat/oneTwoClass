@@ -1,10 +1,11 @@
 package com.onetwoclass.onetwoclass.controller;
 
 import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
-import com.onetwoclass.onetwoclass.domain.form.AddStoreForm;
-import com.onetwoclass.onetwoclass.domain.form.UpdateStoreForm;
+import com.onetwoclass.onetwoclass.domain.form.store.AddStoreForm;
+import com.onetwoclass.onetwoclass.domain.form.store.UpdateStoreForm;
 import com.onetwoclass.onetwoclass.service.StoreService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +25,7 @@ public class StoreController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> addStore(@RequestBody AddStoreForm addStoreForm,
+  ResponseEntity<?> addStore(@RequestBody @Valid AddStoreForm addStoreForm,
       HttpServletRequest request) {
 
     storeService.addStore(addStoreForm,
