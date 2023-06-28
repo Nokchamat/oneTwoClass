@@ -17,7 +17,7 @@ public enum ErrorCode {
 
   NOT_FOUND_STORE(HttpStatus.BAD_REQUEST, "상점이 존재하지 않습니다."),
   ALREADY_EXIST_STORE(HttpStatus.BAD_REQUEST, "이미 상점이 등록되어 있습니다."),
-  PLEASE_DELETE_DAYONECLASS_FIRST(HttpStatus.BAD_REQUEST, "남아있는 데이원클래스가 있습니다."),
+  PLEASE_DELETE_DAYCLASS_FIRST(HttpStatus.BAD_REQUEST, "남아있는 데이클래스가 있습니다."),
 
 
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "잘못된 접근입니다."),

@@ -1,15 +1,16 @@
 package com.onetwoclass.onetwoclass.exception;
 
 import com.onetwoclass.onetwoclass.exception.CustomException.CustomExceptionResponse;
-import com.onetwoclass.onetwoclass.exception.CustomValidationException.CustomValidationExceptionResponse;
-import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionHandler {
 
-  @org.springframework.web.bind.annotation.ExceptionHandler(CustomException.class)
+  @org.springframework.web.bind.annotation.ExceptionHandler({CustomException.class})
   public ResponseEntity<CustomExceptionResponse> customExceptionHandler(
       CustomException customException) {
     return ResponseEntity
@@ -22,18 +23,16 @@ public class ExceptionHandler {
                 .build());
   }
 
-  @org.springframework.web.bind.annotation.ExceptionHandler(CustomValidationException.class)
-  public ResponseEntity<CustomValidationExceptionResponse> customValidationExceptionHandler(
-      CustomValidationException customValidationException) {
+  @org.springframework.web.bind.annotation.ExceptionHandler({MethodArgumentNotValidException.class})
+  public ResponseEntity<?> methodValidException(MethodArgumentNotValidException e
+      , HttpServletRequest request) {
+
+    System.out.println(e.getBindingResult().getAllErrors());
+
     return ResponseEntity
-        .status(customValidationException.getHttpStatus())
-        .body(CustomValidationExceptionResponse.builder()
-            .httpStatus(customValidationException.getHttpStatus())
-            .detailMessage(customValidationException.getMessage())
-            .errorCode(customValidationException.getErrorCode().name())
-            .objectErrors(customValidationException.getObjectErrors().stream()
-                .map(a -> a.getDefaultMessage())
-                .collect(Collectors.toList()))
-            .build());
+        .status(HttpStatus.BAD_REQUEST)
+        .body(e.getBindingResult().getAllErrors().stream()
+            .map(a -> a.getDefaultMessage()));
   }
+
 }
