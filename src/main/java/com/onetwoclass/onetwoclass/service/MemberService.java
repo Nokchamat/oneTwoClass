@@ -7,7 +7,6 @@ import com.onetwoclass.onetwoclass.domain.form.sign.SignUpForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
-import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +17,9 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+
   private final PasswordEncoder passwordEncoder;
+
   private final JwtTokenProvider jwtTokenProvider;
 
   @Transactional
@@ -37,8 +38,6 @@ public class MemberService {
         )
         .phone(signUpForm.getPhone())
         .role(signUpForm.getRole())
-        .registeredAt(LocalDateTime.now())
-        .modifiedAt(LocalDateTime.now())
         .build()
     );
 

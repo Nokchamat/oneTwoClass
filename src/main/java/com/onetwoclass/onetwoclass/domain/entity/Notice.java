@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 
 @Entity
@@ -26,7 +28,11 @@ public class Notice {
   @Lob
   private String text;
 
+  @CreatedDate
   private LocalDateTime registeredAt;
+
+  @LastModifiedDate
+  private LocalDateTime modifiedAt;
 
   @ManyToOne
   @JoinColumn(name = "store_id")
