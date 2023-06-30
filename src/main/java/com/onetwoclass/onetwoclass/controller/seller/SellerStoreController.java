@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.controller;
+package com.onetwoclass.onetwoclass.controller.seller;
 
 import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.form.store.AddStoreForm;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/store")
+@RequestMapping("/api/v1/seller/store")
 @RequiredArgsConstructor
-public class StoreController {
+public class SellerStoreController {
 
   private final StoreService storeService;
   private final JwtTokenProvider jwtTokenProvider;
@@ -29,7 +29,7 @@ public class StoreController {
       HttpServletRequest request) {
 
     storeService.addStore(addStoreForm,
-        jwtTokenProvider.getMemberEmail(jwtTokenProvider.resolveToken(request)));
+        jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
 
     return ResponseEntity.ok("상점 등록이 완료되었습니다.");
   }
@@ -40,7 +40,7 @@ public class StoreController {
 
     storeService.updateStore(updateStoreForm,
         jwtTokenProvider.getMemberEmail(
-            jwtTokenProvider.resolveToken(request)));
+            JwtTokenProvider.resolveToken(request)));
 
     return ResponseEntity.ok("상점 정보 수정이 완료되었습니다.");
   }
@@ -50,7 +50,7 @@ public class StoreController {
 
     return ResponseEntity.ok(storeService
         .getStore(jwtTokenProvider.getMemberEmail(
-            jwtTokenProvider.resolveToken(request))));
+            JwtTokenProvider.resolveToken(request))));
   }
 
   @DeleteMapping
@@ -58,7 +58,7 @@ public class StoreController {
 
     storeService.deleteStore(
         jwtTokenProvider.getMemberEmail(
-            jwtTokenProvider.resolveToken(request)));
+            JwtTokenProvider.resolveToken(request)));
 
     return ResponseEntity.ok("상점 삭제가 완료되었습니다.");
   }

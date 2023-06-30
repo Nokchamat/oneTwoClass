@@ -27,10 +27,10 @@ public class StoreService {
   @Transactional
   public void addStore(AddStoreForm addStoreForm, String email) {
 
-    Member member = memberRepository.findByEmail(email)
+    Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
-    storeRepository.findBySellerId(member.getId())
+    storeRepository.findBySellerId(seller.getId())
         .ifPresent(
             s -> {
               throw new CustomException(ErrorCode.ALREADY_EXIST_STORE);
@@ -40,41 +40,39 @@ public class StoreService {
         .storeName(addStoreForm.getStorename())
         .explains(addStoreForm.getExplains())
         .category(addStoreForm.getCategory())
-        .seller(member)
+        .seller(seller)
         .build());
   }
 
   @Transactional
   public void updateStore(UpdateStoreForm updateStoreForm, String email) {
 
-    Member member = memberRepository.findByEmail(email)
+    Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
-    Store store = storeRepository.findBySellerId(member.getId())
+    Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    store.updateStore(updateStoreForm.getStorename(),
-        updateStoreForm.getExplains(),
-        updateStoreForm.getCategory());
+    store.updateStore(updateStoreForm);
 
   }
 
   public StoreDto getStore(String email) {
 
-    Member member = memberRepository.findByEmail(email)
+    Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
     return Store.toStoreDto(
-        storeRepository.findBySellerId(member.getId())
+        storeRepository.findBySellerId(seller.getId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE)));
   }
 
   public void deleteStore(String email) {
 
-    Member member = memberRepository.findByEmail(email)
+    Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
-    Store store = storeRepository.findBySellerId(member.getId())
+    Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     if (!dayClassRepository.findByStoreId(store.getId()).isEmpty()) {

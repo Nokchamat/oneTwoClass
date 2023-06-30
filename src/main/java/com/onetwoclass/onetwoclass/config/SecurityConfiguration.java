@@ -31,7 +31,7 @@ public class SecurityConfiguration {
 
         .and()
         .authorizeRequests()
-        .antMatchers("/api/v1/store/**").hasRole(Role.SELLER.toString())
+        .antMatchers("/api/v1/seller/**").hasRole(Role.SELLER.toString())
         .antMatchers("/api/v1/member/signup", "/api/v1/member/signin").permitAll()
 
         .and()

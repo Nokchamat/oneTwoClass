@@ -2,6 +2,7 @@ package com.onetwoclass.onetwoclass.domain.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,11 +12,14 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Chatting {
 
   @Id
@@ -33,6 +37,7 @@ public class Chatting {
   @JoinColumn(name = "seller_id")
   private Member seller;
 
+  @CreatedDate
   private LocalDateTime registeredAt;
 
 }
