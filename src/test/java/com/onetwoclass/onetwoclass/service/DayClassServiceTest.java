@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 class DayClassServiceTest {
@@ -67,7 +68,7 @@ class DayClassServiceTest {
     //when
     dayClassService.addDayClass(addDayClassForm, seller.getEmail());
 
-    DayClass dayClass = dayClassRepository.findByStoreId(store.getId()).get(0);
+    DayClass dayClass = dayClassRepository.findAllByStoreId(store.getId()).get(0);
 
     //then
     assertEquals(dayClass.getDayClassName(), addDayClassForm.getDayClassName());
@@ -78,7 +79,7 @@ class DayClassServiceTest {
 
   @Test
   @DisplayName("데이클래스 추가 실패 - 데이클래스 이름 중복")
-  void fail_addDayClass_DuplicationDayclassName() {
+  void fail_addDayClass_DuplicationDayClassName() {
     //given
     Member seller = memberRepository.save(Member.builder()
         .email("fail_addDayClass_DuplicationDayclassName@test.com")
@@ -88,7 +89,7 @@ class DayClassServiceTest {
         .role(Role.SELLER)
         .build());
 
-    Store store = storeRepository.save(Store.builder()
+    storeRepository.save(Store.builder()
         .storeName("강식당")
         .explains("재밌게 만들고 맛있는 음식!")
         .category(Category.DESSERT)
@@ -149,7 +150,7 @@ class DayClassServiceTest {
     //when
     dayClassService.updateDayClass(updateDayClassForm, seller.getEmail());
 
-    DayClass dayClass = dayClassRepository.findByStoreId(store.getId()).get(0);
+    DayClass dayClass = dayClassRepository.findAllByStoreId(store.getId()).get(0);
 
     //then
     assertEquals(dayClass.getDayClassName(), updateDayClassForm.getToChangeDayClassName());
@@ -322,6 +323,95 @@ class DayClassServiceTest {
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.NOT_FOUND_DAYCLASS);
+  }
+
+  @Test
+  @DisplayName("데이클래스 전부 가져오기 성공")
+  void success_getAllDayClass() {
+    //given
+    dayClassRepository.save(DayClass.builder()
+        .dayClassName("마카롱 클래스")
+        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+        .price(5000)
+        .build());
+
+    dayClassRepository.save(DayClass.builder()
+        .dayClassName("빵 클래스")
+        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+        .price(5000)
+        .build());
+
+    //when
+    List<DayClassDto> dayClassDtoList =
+        dayClassService.getAllDayClass(Pageable.ofSize(2));
+
+    //then
+    assertEquals(dayClassDtoList.size(), 2);
+
+  }
+
+  @Test
+  @DisplayName("데이클래스 이름으로 전부 가져오기 성공")
+  void success_getAllDayClassByDayClassName() {
+    //given
+    dayClassRepository.save(DayClass.builder()
+        .dayClassName("success_getAllDayClassByDayClassName1")
+        .explains("success_getAllDayClassByDayClassName")
+        .price(5000)
+        .build());
+
+    dayClassRepository.save(DayClass.builder()
+        .dayClassName("success_getAllDayClassByDayClassName2")
+        .explains("success_getAllDayClassByDayClassName")
+        .price(5000)
+        .build());
+
+    //when
+    List<DayClassDto> dayClassDtoList =
+        dayClassService.getAllDayClassByDayClassName(
+            "getAllDayClassByDayClassName", Pageable.ofSize(5));
+
+    //then
+    assertEquals(dayClassDtoList.size(), 2);
+    assertEquals(dayClassDtoList.get(0).getExplains(), "success_getAllDayClassByDayClassName");
+    assertEquals(dayClassDtoList.get(1).getExplains(), "success_getAllDayClassByDayClassName");
+
+  }
+
+  @Test
+  @DisplayName("데이클래스 이름으로 전부 가져오기 성공")
+  void success_getAllDayClassByStoreId() {
+    //given
+
+    Store store = storeRepository.save(Store.builder()
+        .explains("")
+        .category(Category.DESSERT)
+        .build());
+
+    dayClassRepository.save(DayClass.builder()
+        .dayClassName("success_getAllDayClassByStoreId1")
+        .explains("success_getAllDayClassByStoreId")
+        .price(5000)
+        .store(store)
+        .build());
+
+    dayClassRepository.save(DayClass.builder()
+        .dayClassName("success_getAllDayClassByStoreId2")
+        .explains("success_getAllDayClassByStoreId")
+        .price(5000)
+        .store(store)
+        .build());
+
+    //when
+    List<DayClassDto> dayClassDtoList =
+        dayClassService.getAllDayClassByStoreId(
+            store.getId(), Pageable.ofSize(5));
+
+    //then
+    assertEquals(dayClassDtoList.size(), 2);
+    assertEquals(dayClassDtoList.get(0).getExplains(), "success_getAllDayClassByStoreId");
+    assertEquals(dayClassDtoList.get(1).getExplains(), "success_getAllDayClassByStoreId");
+
   }
 
 

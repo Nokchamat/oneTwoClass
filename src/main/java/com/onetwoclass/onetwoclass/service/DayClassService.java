@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -84,7 +85,7 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    return dayClassRepository.findByStoreId(store.getId())
+    return dayClassRepository.findAllByStoreId(store.getId())
         .stream().map(DayClass::toDayClassDto)
         .collect(Collectors.toList());
 
@@ -104,6 +105,21 @@ public class DayClassService {
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
     dayClassRepository.delete(dayclass);
+  }
+
+  public List<DayClassDto> getAllDayClass(Pageable pageable) {
+    return dayClassRepository.findAll(pageable).stream()
+        .map(DayClass::toDayClassDto).collect(Collectors.toList());
+  }
+
+  public List<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
+    return dayClassRepository.findAllByDayClassNameContaining(dayClassName, pageable)
+        .stream().map(DayClass::toDayClassDto).collect(Collectors.toList());
+  }
+
+  public List<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
+    return dayClassRepository.findAllByStoreId(storeId, pageable)
+        .stream().map(DayClass::toDayClassDto).collect(Collectors.toList());
   }
 
 }

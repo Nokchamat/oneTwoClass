@@ -1,5 +1,6 @@
 package com.onetwoclass.onetwoclass.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.exception.CustomAccessDeniedHandler;
 import com.onetwoclass.onetwoclass.exception.CustomAuthenticationEntryPoint;
@@ -19,6 +20,8 @@ public class SecurityConfiguration {
 
   private final JwtTokenProvider jwtTokenProvider;
 
+  private final ObjectMapper objectMapper;
+
   @Bean
   protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -35,9 +38,9 @@ public class SecurityConfiguration {
         .antMatchers("/api/v1/member/signup", "/api/v1/member/signin").permitAll()
 
         .and()
-        .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+        .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))
         .and()
-        .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+        .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper))
 
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

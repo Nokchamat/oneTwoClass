@@ -35,6 +35,8 @@ public class JwtTokenProvider {
   @Value("#{${jwt.validate}}")
   private Long tokenValidTime = 1000L * 60 * 60; // 토큰 유효시간 1시간 기본
 
+  private final static String PREFIX = "bearer ";
+
   @PostConstruct
   protected void init() {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -46,7 +48,7 @@ public class JwtTokenProvider {
     claims.put("roles", role);
 
     Date now = new Date();
-    return Jwts.builder()
+    return PREFIX + Jwts.builder()
         .setClaims(claims)
         .setIssuedAt(now)
         .setExpiration(new Date(now.getTime() + tokenValidTime))

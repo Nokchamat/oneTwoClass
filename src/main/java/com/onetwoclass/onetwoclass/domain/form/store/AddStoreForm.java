@@ -3,11 +3,15 @@ package com.onetwoclass.onetwoclass.domain.form.store;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddStoreForm {
 
   @NotNull(message = "가게 이름을 기재해주세요.")
