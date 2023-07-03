@@ -6,14 +6,17 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+  private final ObjectMapper objectMapper;
 
   // 액세스 권한이 없는 리소스에 접근할 경우 발생하는 예외
   @Override
@@ -30,7 +33,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         .errorCode(ErrorCode.ACCESS_DENIED.name())
         .build();
 
-    ObjectMapper objectMapper = new ObjectMapper();
     String json = objectMapper.writeValueAsString(exceptionResponse);
 
     response.getWriter().write(json);

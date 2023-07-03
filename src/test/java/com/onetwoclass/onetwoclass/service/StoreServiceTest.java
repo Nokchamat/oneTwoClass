@@ -16,10 +16,12 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 class StoreServiceTest {
@@ -104,7 +106,7 @@ class StoreServiceTest {
     //when
     storeService.addStore(addStoreForm, seller.getEmail());
 
-    StoreDto storeDto = storeService.getStore(seller.getEmail());
+    StoreDto storeDto = storeService.getStoreByEmail(seller.getEmail());
     System.out.println(storeDto.getStoreName());
     System.out.println(storeDto.getExplains());
 
@@ -183,7 +185,7 @@ class StoreServiceTest {
     storeService.addStore(addStoreForm, signUpForm.getEmail());
 
     //when
-    StoreDto storeDto = storeService.getStore(signUpForm.getEmail());
+    StoreDto storeDto = storeService.getStoreByEmail(signUpForm.getEmail());
 
     //then
     assertEquals(addStoreForm.getStorename(), storeDto.getStoreName());
@@ -232,6 +234,55 @@ class StoreServiceTest {
     assertEquals(customException.getErrorCode(), ErrorCode.NOT_FOUND_STORE);
 
   }
+
+  @Test
+  @DisplayName("가게 정보 전부 가져오기 성공")
+  void success_getAllStore() {
+    //given
+    storeRepository.save(Store.builder()
+        .storeName("상점1")
+        .category(Category.DESSERT)
+        .explains("너무 맛있어요")
+        .build());
+
+    storeRepository.save(Store.builder()
+        .storeName("상점2")
+        .category(Category.DESSERT)
+        .explains("너무 맛있어요")
+        .build());
+
+    //when
+    List<StoreDto> storeDtoList = storeService.getAllStore(Pageable.ofSize(2));
+
+    //then
+    assertEquals(storeDtoList.size(), 2);
+
+  }
+
+  @Test
+  @DisplayName("가게 정보 전부 이름으로 가져오기 성공")
+  void success_getAllStoreByName() {
+    //given
+    storeRepository.save(Store.builder()
+        .storeName("상점1")
+        .category(Category.DESSERT)
+        .explains("너무 맛있어요")
+        .build());
+
+    storeRepository.save(Store.builder()
+        .storeName("상점2")
+        .category(Category.DESSERT)
+        .explains("너무 맛있어요")
+        .build());
+
+    //when
+    List<StoreDto> storeDtoList = storeService.getAllStoreByName(Pageable.unpaged(), "2");
+
+    //then
+    assertEquals(storeDtoList.size(), 1);
+
+  }
+
 
 
 }

@@ -6,14 +6,16 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+  private final ObjectMapper objectMapper;
 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,
@@ -29,7 +31,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         .errorCode(ErrorCode.WRONG_TYPE_TOKEN.name())
         .build();
 
-    ObjectMapper objectMapper = new ObjectMapper();
     String json = objectMapper.writeValueAsString(exceptionResponse);
 
     response.getWriter().write(json);

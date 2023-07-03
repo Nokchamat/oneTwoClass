@@ -49,7 +49,7 @@ public class SellerStoreController {
   ResponseEntity<?> getStore(HttpServletRequest request) {
 
     return ResponseEntity.ok(storeService
-        .getStore(jwtTokenProvider.getMemberEmail(
+        .getStoreByEmail(jwtTokenProvider.getMemberEmail(
             JwtTokenProvider.resolveToken(request))));
   }
 
