@@ -278,7 +278,7 @@ class DayClassServiceTest {
 
     //when
     List<DayClassDto> dayClassDtoList =
-        dayClassService.getDayClassByEmail(seller.getEmail());
+        dayClassService.getDayClassByEmail(seller.getEmail(), Pageable.unpaged());
 
     //then
     assertEquals(dayClassDtoList.size(), 2);

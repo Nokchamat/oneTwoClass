@@ -1,10 +1,11 @@
 package com.onetwoclass.onetwoclass.controller.seller;
 
 import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
-import com.onetwoclass.onetwoclass.domain.form.schedule.AddDayClassScheduler;
+import com.onetwoclass.onetwoclass.domain.form.dayclassscheduler.AddDayClassSchedulerForm;
 import com.onetwoclass.onetwoclass.service.DayClassSchedulerService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,23 +24,23 @@ public class SellerDayClassSchedulerController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> addDayClassScheduler(@RequestBody AddDayClassScheduler addDayClassScheduler,
+  ResponseEntity<?> addDayClassScheduler(
+      @RequestBody AddDayClassSchedulerForm addDayClassSchedulerForm,
       HttpServletRequest request) {
 
-    System.out.println(addDayClassScheduler.getDayClassName());
-
-    dayClassSchedulerService.addDayClassScheduler(addDayClassScheduler,
+    dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm,
         jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
 
     return ResponseEntity.ok("스케쥴 추가가 완료되었습니다.");
   }
 
-  @GetMapping("/{dayClassName}")
-  ResponseEntity<?> getDayClassScheduler(@PathVariable String dayClassName,
-      HttpServletRequest request) {
+  @GetMapping("/{dayClassId}")
+  ResponseEntity<?> getDayClassScheduler(@PathVariable Long dayClassId,
+      HttpServletRequest request, Pageable pageable) {
 
-    return ResponseEntity.ok(dayClassSchedulerService.getDayClassSchedulerBySellerEmailAndName(
-        dayClassName, jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request))));
+    return ResponseEntity.ok(dayClassSchedulerService.getDayClassSchedulerByDayClassIdAndEmail(
+        dayClassId, jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)),
+        pageable));
   }
 
 }

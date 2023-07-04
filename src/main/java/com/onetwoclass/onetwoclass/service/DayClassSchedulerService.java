@@ -5,7 +5,7 @@ import com.onetwoclass.onetwoclass.domain.entity.DayClass;
 import com.onetwoclass.onetwoclass.domain.entity.DayClassScheduler;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Store;
-import com.onetwoclass.onetwoclass.domain.form.schedule.AddDayClassScheduler;
+import com.onetwoclass.onetwoclass.domain.form.dayclassscheduler.AddDayClassSchedulerForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
@@ -15,6 +15,7 @@ import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,7 @@ public class DayClassSchedulerService {
 
   private final DayClassRepository dayClassRepository;
 
-  public void addDayClassScheduler(AddDayClassScheduler addScheduleForm, String email) {
+  public void addDayClassScheduler(AddDayClassSchedulerForm addScheduleForm, String email) {
 
     Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
@@ -38,13 +39,17 @@ public class DayClassSchedulerService {
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     DayClass dayClass = dayClassRepository
-        .findByStoreIdAndDayClassName(store.getId(), addScheduleForm.getDayClassName())
+        .findById(addScheduleForm.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
+
+    if (dayClass.getStore().getId() != store.getId()) {
+      throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
+    }
 
     dayClassSchedulerRepository
         .findByDayClassIdAndScheduledDate(dayClass.getId(), addScheduleForm.getScheduledDate())
         .ifPresent(a -> {
-          throw new CustomException(ErrorCode.ALREADY_EXIST_SCHEDULER);
+          throw new CustomException(ErrorCode.ALREADY_EXIST_DAYCLASS_SCHEDULER);
         });
 
     dayClassSchedulerRepository.save(DayClassScheduler.builder()
@@ -54,8 +59,8 @@ public class DayClassSchedulerService {
 
   }
 
-  public List<DayClassSchedulerDto> getDayClassSchedulerBySellerEmailAndName(String dayClassName,
-      String email) {
+  public List<DayClassSchedulerDto> getDayClassSchedulerByDayClassIdAndEmail(Long dayClassId,
+      String email, Pageable pageable) {
 
     Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
@@ -63,21 +68,25 @@ public class DayClassSchedulerService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    DayClass dayClass = dayClassRepository
-        .findByStoreIdAndDayClassName(store.getId(), dayClassName)
+    DayClass dayClass = dayClassRepository.findById(dayClassId)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
+    if (store.getId() != dayClass.getStore().getId()) {
+      throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
+    }
+
     List<DayClassScheduler> dayClassSchedulerList
-        = dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId());
+        = dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId(), pageable);
 
     return dayClassSchedulerList.stream()
         .map(DayClassScheduler::toDayClassSchedulerDto)
         .collect(Collectors.toList());
   }
 
-  public List<DayClassSchedulerDto> getDayClassSchedulerByDayClassId(Long dayClassId) {
+  public List<DayClassSchedulerDto> getDayClassSchedulerByDayClassId(
+      Long dayClassId, Pageable pageable) {
 
-    return dayClassSchedulerRepository.findAllByDayClassId(dayClassId)
+    return dayClassSchedulerRepository.findAllByDayClassId(dayClassId, pageable)
         .stream().map(DayClassScheduler::toDayClassSchedulerDto).collect(Collectors.toList());
   }
 

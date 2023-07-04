@@ -32,6 +32,7 @@ public class DayClassScheduler {
 
   public static DayClassSchedulerDto toDayClassSchedulerDto(DayClassScheduler dayClassScheduler) {
     return DayClassSchedulerDto.builder()
+        .dayClassSchedulerId(dayClassScheduler.id)
         .dayClassName(dayClassScheduler.getDayClass().getDayClassName())
         .scheduledDate(dayClassScheduler.scheduledDate)
         .build();

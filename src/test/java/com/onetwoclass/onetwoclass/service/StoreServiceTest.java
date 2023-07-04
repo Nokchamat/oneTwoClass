@@ -106,9 +106,7 @@ class StoreServiceTest {
     //when
     storeService.addStore(addStoreForm, seller.getEmail());
 
-    StoreDto storeDto = storeService.getStoreByEmail(seller.getEmail());
-    System.out.println(storeDto.getStoreName());
-    System.out.println(storeDto.getExplains());
+    storeService.getStoreByEmail(seller.getEmail());
 
     CustomException customException =
         assertThrows(CustomException.class,
