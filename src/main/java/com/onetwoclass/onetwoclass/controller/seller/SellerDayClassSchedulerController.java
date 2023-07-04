@@ -26,8 +26,6 @@ public class SellerDayClassSchedulerController {
   ResponseEntity<?> addDayClassScheduler(@RequestBody AddDayClassScheduler addDayClassScheduler,
       HttpServletRequest request) {
 
-    System.out.println(addDayClassScheduler.getDayClassName());
-
     dayClassSchedulerService.addDayClassScheduler(addDayClassScheduler,
         jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
 
