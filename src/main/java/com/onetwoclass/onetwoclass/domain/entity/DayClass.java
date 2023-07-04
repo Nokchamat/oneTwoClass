@@ -2,7 +2,9 @@ package com.onetwoclass.onetwoclass.domain.entity;
 
 import com.onetwoclass.onetwoclass.domain.dto.DayClassDto;
 import com.onetwoclass.onetwoclass.domain.form.dayclass.UpdateDayClassForm;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,13 +15,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-public class DayClass extends BaseTimeEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class DayClass {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +37,12 @@ public class DayClass extends BaseTimeEntity {
   private String explains;
 
   private Integer price;
+
+  @CreatedDate
+  private LocalDateTime registeredAt;
+
+  @LastModifiedDate
+  private LocalDateTime modifiedAt;
 
   @ManyToOne
   @JoinColumn(name = "store_id")
@@ -57,8 +69,8 @@ public class DayClass extends BaseTimeEntity {
         .dayClassName(dayClass.dayClassName)
         .explains(dayClass.explains)
         .price(dayClass.price)
-        .registeredAt(dayClass.getRegisteredAt())
-        .modifiedAt(dayClass.getModifiedAt())
+        .registeredAt(dayClass.registeredAt)
+        .modifiedAt(dayClass.modifiedAt)
         .build();
   }
 
