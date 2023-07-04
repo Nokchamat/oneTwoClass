@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DayClassRepository extends JpaRepository<DayClass, Long> {
 
+  Optional<DayClass> findByStoreIdAndDayClassName(Long id, String dayClassName);
   List<DayClass> findAllByStoreId(Long id, Pageable pageable);
   List<DayClass> findAllByStoreId(Long id);
-  Optional<DayClass> findByStoreIdAndDayClassName(Long id, String dayClassName);
   List<DayClass> findAllByDayClassNameContaining(String dayClassName, Pageable pageable);
 
 }
