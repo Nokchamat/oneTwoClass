@@ -27,8 +27,6 @@ public class ExceptionHandler {
   public ResponseEntity<?> methodValidException(MethodArgumentNotValidException e
       , HttpServletRequest request) {
 
-    System.out.println(e.getBindingResult().getAllErrors());
-
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(e.getBindingResult().getAllErrors().stream()

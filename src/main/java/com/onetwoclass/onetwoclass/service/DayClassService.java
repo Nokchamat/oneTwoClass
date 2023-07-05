@@ -77,7 +77,7 @@ public class DayClassService {
 
   }
 
-  public List<DayClassDto> getDayClassByEmail(String email) {
+  public List<DayClassDto> getDayClassByEmail(String email, Pageable pageable) {
 
     Member seller = memberRepository.findByEmail(email)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
@@ -85,7 +85,7 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    return dayClassRepository.findAllByStoreId(store.getId())
+    return dayClassRepository.findAllByStoreId(store.getId(), pageable)
         .stream().map(DayClass::toDayClassDto)
         .collect(Collectors.toList());
 

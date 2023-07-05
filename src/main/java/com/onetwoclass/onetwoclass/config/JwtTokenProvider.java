@@ -77,12 +77,10 @@ public class JwtTokenProvider {
     Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 
     return claims.getBody().getExpiration().before(new Date());
-
   }
 
   public static String resolveToken(HttpServletRequest request) {
     return request.getHeader("X-AUTH-TOKEN");
   }
-
 
 }

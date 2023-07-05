@@ -8,6 +8,7 @@ import com.onetwoclass.onetwoclass.service.DayClassService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,11 +48,11 @@ public class SellerDayClassController {
   }
 
   @GetMapping
-  ResponseEntity<?> getDayClass(HttpServletRequest request) {
+  ResponseEntity<?> getDayClass(HttpServletRequest request, Pageable pageable) {
 
     return ResponseEntity.ok(
         dayClassService.getDayClassByEmail(
-            jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request))));
+            jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)), pageable));
   }
 
   @DeleteMapping

@@ -21,11 +21,19 @@ public enum ErrorCode {
 
   DUPLICATION_DAYCLASS_NAME(HttpStatus.BAD_REQUEST, "중복된 데이클래스 이름이 존재합니다."),
   NOT_FOUND_DAYCLASS(HttpStatus.BAD_REQUEST, "데이클래스가 존재하지 않습니다."),
+  NOT_FOUND_DAYCLASS_SCHEDULER(HttpStatus.BAD_REQUEST, "데이클래스 스케쥴러가 존재하지 않습니다."),
+  ALREADY_EXIST_DAYCLASS_SCHEDULER(HttpStatus.BAD_REQUEST, "이미 등록되어 있는 스케쥴러 입니다."),
+  MISMATCHED_SELLER_AND_DAYCLASS(HttpStatus.BAD_REQUEST, "데이클래스와 소유주가 다릅니다."),
 
-  ALREADY_EXIST_SCHEDULER(HttpStatus.BAD_REQUEST, "이미 등록되어 있는 스케쥴러입니다."),
+
+  ALREADY_REQUESTED_SCHEDULE(HttpStatus.BAD_REQUEST, "이미 요청한 스케쥴 입니다."),
+  ALREADY_ACCEPTED_SCHEDULE(HttpStatus.BAD_REQUEST, "이미 처리된 스케쥴 입니다."),
+  NOT_FOUND_SCHEDULE(HttpStatus.BAD_REQUEST, "스케쥴이 존재하지 않습니다."),
+
 
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "잘못된 접근입니다."),
-  WRONG_TYPE_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다.");
+  WRONG_TYPE_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다."),
+  EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "만료된 토큰입니다.");
 
 
   private final HttpStatus httpStatus;

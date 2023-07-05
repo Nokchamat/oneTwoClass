@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain.form.schedule;
+package com.onetwoclass.onetwoclass.domain.form.dayclassscheduler;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class AddDayClassScheduler {
+public class AddDayClassSchedulerForm {
 
-  @NotNull(message = "데이클래스명을 기재해주세요.")
-  private String dayClassName;
+  @NotNull(message = "데이클래스의 id를 기재해주세요.")
+  private Long dayClassId;
 
   @NotNull(message = "등록하시고자 하는 날짜를 기재해주세요.")
   private LocalDateTime scheduledDate;

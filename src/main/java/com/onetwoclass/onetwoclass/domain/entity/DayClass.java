@@ -54,6 +54,7 @@ public class DayClass extends BaseTimeEntity {
 
   public static DayClassDto toDayClassDto(DayClass dayClass) {
     return DayClassDto.builder()
+        .dayClassId(dayClass.id)
         .dayClassName(dayClass.dayClassName)
         .explains(dayClass.explains)
         .price(dayClass.price)

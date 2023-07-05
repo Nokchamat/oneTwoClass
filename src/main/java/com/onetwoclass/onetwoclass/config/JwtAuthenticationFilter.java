@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
     log.debug("======= JwtAuthenticationFilter 동작 =======");
 
-    String token = jwtTokenProvider.resolveToken(request);
+    String token = JwtTokenProvider.resolveToken(request);
     log.info("token 인증 시작 : {} ", token);
 
     if (token != null && !jwtTokenProvider.validateToken(token)) {

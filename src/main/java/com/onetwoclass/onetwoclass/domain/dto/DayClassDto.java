@@ -10,6 +10,8 @@ import lombok.Setter;
 @Builder
 public class DayClassDto {
 
+  private Long dayClassId;
+
   private String dayClassName;
 
   private String explains;
