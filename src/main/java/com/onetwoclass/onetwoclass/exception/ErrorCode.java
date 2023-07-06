@@ -30,6 +30,12 @@ public enum ErrorCode {
   ALREADY_ACCEPTED_SCHEDULE(HttpStatus.BAD_REQUEST, "이미 처리된 스케쥴 입니다."),
   NOT_FOUND_SCHEDULE(HttpStatus.BAD_REQUEST, "스케쥴이 존재하지 않습니다."),
 
+  NOT_FOUND_STORE_BOOKMARK(HttpStatus.BAD_REQUEST, "상점 북마크가 존재하지 않습니다."),
+  ALREADY_EXIST_STORE_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 북마크에 등록되어 있는 상점 입니다."),
+
+  ALREADY_EXIST_DAYCLASS_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 북마크에 등록되어 있는 데이클래스 입니다."),
+  NOT_FOUND_DAYCLASS_BOOKMARK(HttpStatus.BAD_REQUEST, "데이클래스 북마크가 존재하지 않습니다."),
+
 
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "잘못된 접근입니다."),
   WRONG_TYPE_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다."),

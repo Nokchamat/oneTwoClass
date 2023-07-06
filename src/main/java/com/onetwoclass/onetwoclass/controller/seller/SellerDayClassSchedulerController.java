@@ -28,7 +28,7 @@ public class SellerDayClassSchedulerController {
       @RequestBody AddDayClassSchedulerForm addDayClassSchedulerForm,
       HttpServletRequest request) {
 
-    dayClassSchedulerService.addDayClassScheduler(addDayClassScheduler,
+    dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm,
         jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
 
     return ResponseEntity.ok("스케쥴 추가가 완료되었습니다.");

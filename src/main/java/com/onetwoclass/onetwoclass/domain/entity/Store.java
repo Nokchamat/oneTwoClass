@@ -58,6 +58,7 @@ public class Store extends BaseTimeEntity{
 
   public static StoreDto toStoreDto(Store store) {
     return StoreDto.builder()
+        .storeId(store.id)
         .storeName(store.storeName)
         .explains(store.explains)
         .category(store.category)
