@@ -156,7 +156,7 @@ class DayClassBookmarkServiceTest {
         .store(store)
         .build());
 
-    dayClassBookmarkRepository.save(DayClassBookmark.builder()
+    DayClassBookmark dayClassBookmark = dayClassBookmarkRepository.save(DayClassBookmark.builder()
         .customer(customer)
         .dayClass(dayClass1)
         .build());
@@ -167,7 +167,7 @@ class DayClassBookmarkServiceTest {
         .build());
 
     DeleteDayClassBookmarkForm deleteDayClassBookmarkForm =
-        DeleteDayClassBookmarkForm.builder().dayClassBookmarkId(dayClass1.getId()).build();
+        DeleteDayClassBookmarkForm.builder().dayClassBookmarkId(dayClassBookmark.getId()).build();
 
     //when
     List<DayClassBookmark> dayClassBookmarkList1 =
