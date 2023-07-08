@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class StoreDto {
 
+  private Long storeId;
+
   private String storeName;
 
   private String explains;
