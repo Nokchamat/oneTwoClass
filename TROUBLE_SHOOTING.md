@@ -26,3 +26,10 @@ throw 를 붙이면 에러가 나서 "수정 전"과 같이 하면 작동될 것
         .ifPresent(a -> {
             throw new CustomException(ErrorCode.ALREADY_EXIST_ACCOUNT);
     });
+
+## ExpiredJwtException 발생 시 ExceptionHandler 작동 안 함
+해당 건은 어플리케이션의 구조를 잘 몰랐던 이슈였습니다. 
+ExceptionHandler의 경우 Spring에서 발생하는 예외는 잡아주지만 그 이전 단인 Filter에서 발생했기 때문에
+예외가 발생해도 ExceptionHandler가 작동이 안 됐던 것입니다.
+해당 건은 Excpetion이 발생했을 때 catch로 감싸준 뒤 response를 설정해주는 방식으로 하여 해결하였습니다.
+

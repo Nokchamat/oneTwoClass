@@ -4,6 +4,7 @@ import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.form.review.AddReviewForm;
 import com.onetwoclass.onetwoclass.service.ReviewService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ReviewController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> addReview(@RequestBody AddReviewForm addReviewForm,
+  ResponseEntity<?> addReview(@RequestBody @Valid AddReviewForm addReviewForm,
       HttpServletRequest request) {
 
     reviewService.addReview(addReviewForm,

@@ -44,7 +44,7 @@ public class SecurityConfiguration {
         .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper))
 
         .and()
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, objectMapper),
             UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();

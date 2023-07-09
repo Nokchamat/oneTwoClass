@@ -4,6 +4,7 @@ import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.form.dayclassscheduler.AddDayClassSchedulerForm;
 import com.onetwoclass.onetwoclass.service.DayClassSchedulerService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class SellerDayClassSchedulerController {
 
   @PostMapping
   ResponseEntity<?> addDayClassScheduler(
-      @RequestBody AddDayClassSchedulerForm addDayClassSchedulerForm,
+      @RequestBody @Valid AddDayClassSchedulerForm addDayClassSchedulerForm,
       HttpServletRequest request) {
 
     dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm,

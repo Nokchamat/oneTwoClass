@@ -38,7 +38,7 @@ public class SellerDayClassController {
   }
 
   @PutMapping
-  ResponseEntity<?> updateDayClass(@RequestBody UpdateDayClassForm updateDayClassForm,
+  ResponseEntity<?> updateDayClass(@RequestBody @Valid UpdateDayClassForm updateDayClassForm,
       HttpServletRequest request) {
 
     dayClassService.updateDayClass(updateDayClassForm,

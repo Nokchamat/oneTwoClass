@@ -40,7 +40,7 @@ public enum ErrorCode {
 
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "잘못된 접근입니다."),
   WRONG_TYPE_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다."),
-  EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "만료된 토큰입니다."),
+  EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
 
   ALREADY_EXIST_REVIEW(HttpStatus.BAD_REQUEST, "이미 작성된 리뷰가 존재합니다."),
 

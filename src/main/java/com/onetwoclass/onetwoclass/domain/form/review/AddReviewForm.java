@@ -19,8 +19,8 @@ public class AddReviewForm {
   private Long scheduleId;
 
   @NotNull(message = "별점을 기재해주세요.")
-  @Min(1)
-  @Max(5)
+  @Min(value = 1, message = "별점은 1 이상 5 이하입니다.")
+  @Max(value = 5, message = "별점은 1 이상 5 이하입니다.")
   private Integer star;
 
   @NotNull(message = "내용을 기재해주세요.")
