@@ -9,7 +9,6 @@ import com.onetwoclass.onetwoclass.domain.form.notice.DeleteNoticeForm;
 import com.onetwoclass.onetwoclass.domain.form.notice.UpdateNoticeForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.NoticeRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import java.util.List;
@@ -23,16 +22,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NoticeService {
 
-  private final MemberRepository memberRepository;
-
   private final NoticeRepository noticeRepository;
 
   private final StoreRepository storeRepository;
 
-  public void addNotice(AddNoticeForm addNoticeForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addNotice(AddNoticeForm addNoticeForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -45,10 +39,7 @@ public class NoticeService {
   }
 
 
-  public List<NoticeDto> getNoticeBySellerEmail(Pageable pageable, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public List<NoticeDto> getNoticeBySellerEmail(Pageable pageable, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -57,10 +48,7 @@ public class NoticeService {
         .stream().map(Notice::toNoticeDto).collect(Collectors.toList());
   }
 
-  public void deleteNotice(DeleteNoticeForm deleteNoticeForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void deleteNotice(DeleteNoticeForm deleteNoticeForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -76,10 +64,7 @@ public class NoticeService {
   }
 
   @Transactional
-  public void updateNotice(UpdateNoticeForm updateNoticeForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void updateNotice(UpdateNoticeForm updateNoticeForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));

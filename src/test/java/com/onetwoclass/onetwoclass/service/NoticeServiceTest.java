@@ -64,7 +64,7 @@ class NoticeServiceTest {
         .build();
 
     //when
-    noticeService.addNotice(addNoticeForm, seller.getEmail());
+    noticeService.addNotice(addNoticeForm, seller);
     List<Notice> noticeList =
         noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
 
@@ -106,7 +106,7 @@ class NoticeServiceTest {
 
     //when
     List<NoticeDto> noticeDtoList =
-        noticeService.getNoticeBySellerEmail(Pageable.unpaged(), seller.getEmail());
+        noticeService.getNoticeBySellerEmail(Pageable.unpaged(), seller);
 
     //then
     assertEquals(noticeDtoList.size(), 2);
@@ -149,7 +149,7 @@ class NoticeServiceTest {
 
     //when
     List<Notice> noticeList1 = noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
-    noticeService.deleteNotice(deleteNoticeForm, seller.getEmail());
+    noticeService.deleteNotice(deleteNoticeForm, seller);
     List<Notice> noticeList2 = noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
 
     //then
@@ -190,7 +190,7 @@ class NoticeServiceTest {
         .build();
 
     //when
-    noticeService.updateNotice(updateNoticeForm, seller.getEmail());
+    noticeService.updateNotice(updateNoticeForm, seller);
 
     Notice updatedNotice = noticeRepository.findById(notice.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_NOTICE));

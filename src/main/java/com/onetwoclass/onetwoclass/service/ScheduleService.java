@@ -35,10 +35,7 @@ public class ScheduleService {
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
-  public void requestSchedule(RequestScheduleForm requestScheduleForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void requestSchedule(RequestScheduleForm requestScheduleForm, Member customer) {
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.findById(requestScheduleForm.getDayClassSchedulerId())
@@ -59,20 +56,14 @@ public class ScheduleService {
 
   }
 
-  public List<ScheduleDto> getAllScheduleByCustomerEmail(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public List<ScheduleDto> getAllScheduleByCustomerEmail(Member customer, Pageable pageable) {
 
     return scheduleRepository.findAllByCustomerId(customer.getId(), pageable)
         .stream().map(Schedule::toScheduleDto).collect(Collectors.toList());
   }
 
   public List<ScheduleDto> getAllScheduleBySellerEmailAndDayClassSchedulerId(
-      String email, Long dayClassSchedulerId, Pageable pageable) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+      Member seller, Long dayClassSchedulerId, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -93,10 +84,7 @@ public class ScheduleService {
   }
 
   @Transactional
-  public void acceptScheduleRequest(String email, Long scheduleId) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void acceptScheduleRequest(Member seller, Long scheduleId) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));

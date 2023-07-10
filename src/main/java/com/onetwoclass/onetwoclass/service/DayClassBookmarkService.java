@@ -27,10 +27,7 @@ public class DayClassBookmarkService {
 
   private final MemberRepository memberRepository;
 
-  public void addDayClassBookmark(AddDayClassBookmarkForm addDayClassBookmarkForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addDayClassBookmark(AddDayClassBookmarkForm addDayClassBookmarkForm, Member customer) {
 
     DayClass dayClass = dayClassRepository.findById(addDayClassBookmarkForm.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
@@ -47,10 +44,7 @@ public class DayClassBookmarkService {
   }
 
   public void deleteDayClassBookmark(DeleteDayClassBookmarkForm dayClassBookmarkForm,
-      String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+      Member customer) {
 
     DayClassBookmark dayClassBookmark =
         dayClassBookmarkRepository.findById(dayClassBookmarkForm.getDayClassBookmarkId())
@@ -64,10 +58,7 @@ public class DayClassBookmarkService {
 
   }
 
-  public List<DayClassBookmarkDto> getDayClassBookmark(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public List<DayClassBookmarkDto> getDayClassBookmark(Member customer, Pageable pageable) {
 
     return dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), pageable)
         .stream().map(DayClassBookmark::toDayClassBookmarkDto).collect(Collectors.toList());

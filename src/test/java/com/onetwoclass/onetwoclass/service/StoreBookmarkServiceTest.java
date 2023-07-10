@@ -61,7 +61,7 @@ class StoreBookmarkServiceTest {
         .storeId(store.getId())
         .build();
     //when
-    storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer.getEmail());
+    storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer);
 
     StoreBookmark storeBookmark = storeBookmarkRepository
         .findByCustomerIdAndStoreId(customer.getId(), addStoreBookmarkForm.getStoreId())
@@ -95,10 +95,10 @@ class StoreBookmarkServiceTest {
         .storeId(store.getId())
         .build();
     //when
-    storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer.getEmail());
+    storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer);
 
     CustomException customException = assertThrows(CustomException.class,
-        () -> storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer.getEmail()));
+        () -> storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.ALREADY_EXIST_STORE_BOOKMARK);
@@ -146,7 +146,7 @@ class StoreBookmarkServiceTest {
             .storeBookmarkId(storeBookmark.getId())
             .build();
 
-    storeBookmarkService.deleteStoreBookmark(deleteStoreBookmarkForm, customer.getEmail());
+    storeBookmarkService.deleteStoreBookmark(deleteStoreBookmarkForm, customer);
 
     //when
     List<StoreBookmark> storeBookmarkList =
@@ -195,7 +195,7 @@ class StoreBookmarkServiceTest {
 
     //when
     List<StoreBookmarkDto> storeBookmarkDtoList =
-        storeBookmarkService.getStoreBookmark(customer.getEmail(), Pageable.unpaged());
+        storeBookmarkService.getStoreBookmark(customer, Pageable.unpaged());
 
     //then
     assertEquals(storeBookmarkDtoList.size(), 2);

@@ -95,7 +95,7 @@ class ScheduleServiceTest {
         .build();
 
     //when
-    scheduleService.requestSchedule(requestScheduleForm, customer.getEmail());
+    scheduleService.requestSchedule(requestScheduleForm, customer);
 
     Schedule schedule =
         scheduleRepository.findByCustomerIdAndDayClassSchedulerId(
@@ -153,10 +153,10 @@ class ScheduleServiceTest {
         .build();
 
     //when
-    scheduleService.requestSchedule(requestScheduleForm, customer.getEmail());
+    scheduleService.requestSchedule(requestScheduleForm, customer);
 
     CustomException customException = assertThrows(CustomException.class,
-        () -> scheduleService.requestSchedule(requestScheduleForm, customer.getEmail()));
+        () -> scheduleService.requestSchedule(requestScheduleForm, customer));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.ALREADY_REQUESTED_SCHEDULE);
@@ -225,7 +225,7 @@ class ScheduleServiceTest {
 
     //when
     List<ScheduleDto> scheduleDtoList = scheduleService.getAllScheduleByCustomerEmail(
-        customer.getEmail(), Pageable.unpaged());
+        customer, Pageable.unpaged());
 
     //then
     assertEquals(scheduleDtoList.size(), 2);
@@ -296,7 +296,7 @@ class ScheduleServiceTest {
 
     //when
     List<ScheduleDto> scheduleDtoList = scheduleService.getAllScheduleBySellerEmailAndDayClassSchedulerId(
-        seller.getEmail(), dayClassScheduler.getId(), Pageable.unpaged());
+        seller, dayClassScheduler.getId(), Pageable.unpaged());
 
     //then
     assertEquals(scheduleDtoList.size(), 2);
@@ -353,7 +353,7 @@ class ScheduleServiceTest {
     boolean yetYn = schedule1.getAcceptYn();
 
     //when
-    scheduleService.acceptScheduleRequest(seller.getEmail(), schedule1.getId());
+    scheduleService.acceptScheduleRequest(seller, schedule1.getId());
 
     Schedule schedule2 = scheduleRepository.findById(schedule1.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));

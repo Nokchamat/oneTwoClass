@@ -23,17 +23,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DayClassService {
 
-  private final MemberRepository memberRepository;
-
   private final StoreRepository storeRepository;
 
   private final DayClassRepository dayClassRepository;
 
   @Transactional
-  public void addDayClass(AddDayClassForm addDayClassForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addDayClass(AddDayClassForm addDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -55,10 +50,7 @@ public class DayClassService {
 
 
   @Transactional
-  public void updateDayClass(UpdateDayClassForm updateDayClassForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void updateDayClass(UpdateDayClassForm updateDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -77,10 +69,7 @@ public class DayClassService {
 
   }
 
-  public List<DayClassDto> getDayClassByEmail(String email, Pageable pageable) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public List<DayClassDto> getDayClassBySeller(Member seller, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -91,10 +80,7 @@ public class DayClassService {
 
   }
 
-  public void deleteDayClass(DeleteDayClassForm deleteDayClassForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void deleteDayClass(DeleteDayClassForm deleteDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));

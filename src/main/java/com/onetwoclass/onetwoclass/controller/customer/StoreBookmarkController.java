@@ -1,14 +1,14 @@
 package com.onetwoclass.onetwoclass.controller.customer;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
+import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.storebookmark.AddStoreBookmarkForm;
 import com.onetwoclass.onetwoclass.domain.form.storebookmark.DeleteStoreBookmarkForm;
 import com.onetwoclass.onetwoclass.service.StoreBookmarkService;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,14 +23,11 @@ public class StoreBookmarkController {
 
   private final StoreBookmarkService storeBookmarkService;
 
-  private final JwtTokenProvider jwtTokenProvider;
-
   @PostMapping
   ResponseEntity<?> addStoreBookmark(@RequestBody @Valid AddStoreBookmarkForm addStoreBookmarkForm,
-      HttpServletRequest request) {
+      @AuthenticationPrincipal Member customer) {
 
-    storeBookmarkService.addStoreBookmark(addStoreBookmarkForm,
-        jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
+    storeBookmarkService.addStoreBookmark(addStoreBookmarkForm, customer);
 
     return ResponseEntity.ok("스토어 북마크 추가가 완료되었습니다.");
   }
@@ -38,19 +35,17 @@ public class StoreBookmarkController {
   @DeleteMapping
   ResponseEntity<?> deleteStoreBookmark(
       @RequestBody @Valid DeleteStoreBookmarkForm deleteStoreBookmarkForm,
-      HttpServletRequest request) {
+      @AuthenticationPrincipal Member customer) {
 
-    storeBookmarkService.deleteStoreBookmark(deleteStoreBookmarkForm,
-        jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
+    storeBookmarkService.deleteStoreBookmark(deleteStoreBookmarkForm, customer);
 
     return ResponseEntity.ok("스토어 북마크 삭제가 완료되었습니다.");
   }
 
   @GetMapping
-  ResponseEntity<?> getStoreBookmark(HttpServletRequest request, Pageable pageable) {
+  ResponseEntity<?> getStoreBookmark(@AuthenticationPrincipal Member customer, Pageable pageable) {
 
-    return ResponseEntity.ok(storeBookmarkService.getStoreBookmark(
-        jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)), pageable));
+    return ResponseEntity.ok(storeBookmarkService.getStoreBookmark(customer, pageable));
   }
 
 }

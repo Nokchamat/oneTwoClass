@@ -19,15 +19,13 @@ public class CustomerStoreController {
   private final StoreService storeService;
 
   @GetMapping
-  ResponseEntity<?> getAllStore(
-      @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+  ResponseEntity<?> getAllStore(Pageable pageable) {
 
     return ResponseEntity.ok(storeService.getAllStore(pageable));
   }
 
   @GetMapping("/{name}")
-  ResponseEntity<?> getAllStoreByName(@PathVariable String name,
-      @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+  ResponseEntity<?> getAllStoreByName(@PathVariable String name, Pageable pageable) {
 
     return ResponseEntity.ok(storeService.getAllStoreByName(pageable, name));
   }

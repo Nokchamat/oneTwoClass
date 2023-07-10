@@ -28,10 +28,7 @@ public class StoreService {
   private final DayClassRepository dayClassRepository;
 
   @Transactional
-  public void addStore(AddStoreForm addStoreForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addStore(AddStoreForm addStoreForm, Member seller) {
 
     storeRepository.findBySellerId(seller.getId())
         .ifPresent(
@@ -48,10 +45,7 @@ public class StoreService {
   }
 
   @Transactional
-  public void updateStore(UpdateStoreForm updateStoreForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void updateStore(UpdateStoreForm updateStoreForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -60,20 +54,14 @@ public class StoreService {
 
   }
 
-  public StoreDto getStoreByEmail(String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public StoreDto getStoreBySeller(Member seller) {
 
     return Store.toStoreDto(
         storeRepository.findBySellerId(seller.getId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE)));
   }
 
-  public void deleteStore(String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void deleteStore(Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));

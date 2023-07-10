@@ -24,16 +24,11 @@ public class DayClassSchedulerService {
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
-  private final MemberRepository memberRepository;
-
   private final StoreRepository storeRepository;
 
   private final DayClassRepository dayClassRepository;
 
-  public void addDayClassScheduler(AddDayClassSchedulerForm addScheduleForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addDayClassScheduler(AddDayClassSchedulerForm addScheduleForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -60,10 +55,7 @@ public class DayClassSchedulerService {
   }
 
   public List<DayClassSchedulerDto> getDayClassSchedulerByDayClassIdAndEmail(Long dayClassId,
-      String email, Pageable pageable) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+      Member seller, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));

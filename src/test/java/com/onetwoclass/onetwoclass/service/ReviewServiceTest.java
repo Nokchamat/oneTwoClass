@@ -90,7 +90,7 @@ class ReviewServiceTest {
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
             .dayClass(dayClass)
-            .scheduledDate(LocalDateTime.now().plusDays(3))
+            .scheduledDate(LocalDateTime.now().minusDays(3))
             .build());
 
     Schedule schedule = scheduleRepository.save(Schedule.builder()
@@ -106,7 +106,7 @@ class ReviewServiceTest {
         .build();
 
     //when
-    reviewService.addReview(addReviewForm, customer.getEmail());
+    reviewService.addReview(addReviewForm, customer);
 
     Review review = reviewRepository.findByScheduleId(schedule.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.ALREADY_EXIST_REVIEW));
@@ -171,7 +171,7 @@ class ReviewServiceTest {
 
     //when
     CustomException customException = assertThrows(
-        CustomException.class, () -> reviewService.addReview(addReviewForm, customer.getEmail()));
+        CustomException.class, () -> reviewService.addReview(addReviewForm, customer));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.NOT_VISITED_DAYCLASS);
@@ -214,7 +214,7 @@ class ReviewServiceTest {
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
             .dayClass(dayClass)
-            .scheduledDate(LocalDateTime.now().plusDays(3))
+            .scheduledDate(LocalDateTime.now().minusDays(3))
             .build());
 
     Schedule schedule = scheduleRepository.save(Schedule.builder()
@@ -230,10 +230,10 @@ class ReviewServiceTest {
         .build();
 
     //when
-    reviewService.addReview(addReviewForm, customer.getEmail());
+    reviewService.addReview(addReviewForm, customer);
 
     CustomException customException = assertThrows(
-        CustomException.class, () -> reviewService.addReview(addReviewForm, customer.getEmail()));
+        CustomException.class, () -> reviewService.addReview(addReviewForm, customer));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.ALREADY_EXIST_REVIEW);
@@ -295,7 +295,7 @@ class ReviewServiceTest {
         .build());
 
     List<ReviewDto> reviewDtoList =
-        reviewService.getReviewByCustomerEmail(customer.getEmail(), Pageable.unpaged());
+        reviewService.getReviewByCustomer(customer, Pageable.unpaged());
 
     //then
     assertEquals(reviewDtoList.get(0).getDayClassId(), review.getDayClass().getId());

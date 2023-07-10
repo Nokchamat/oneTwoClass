@@ -15,6 +15,7 @@ import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.ReviewRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,7 @@ public class ReviewService {
 
   private final ScheduleRepository scheduleRepository;
 
-  public void addReview(AddReviewForm addReviewForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addReview(AddReviewForm addReviewForm, Member customer) {
 
     Schedule schedule = scheduleRepository.findById(addReviewForm.getScheduleId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
@@ -73,10 +71,7 @@ public class ReviewService {
 
   }
 
-  public List<ReviewDto> getReviewByCustomerEmail(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public List<ReviewDto> getReviewByCustomer(Member customer, Pageable pageable) {
 
     return reviewRepository.findAllByCustomerId(customer.getId(), pageable)
         .stream().map(Review::toReviewDto).collect(Collectors.toList());

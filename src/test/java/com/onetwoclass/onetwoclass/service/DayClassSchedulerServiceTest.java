@@ -76,7 +76,7 @@ class DayClassSchedulerServiceTest {
             .build();
 
     //when
-    dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm, seller.getEmail());
+    dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm, seller);
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId()).get(0);
@@ -138,7 +138,7 @@ class DayClassSchedulerServiceTest {
     CustomException customException =
         assertThrows(CustomException.class,
             () -> dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm,
-                seller2.getEmail()));
+                seller2));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
@@ -178,12 +178,12 @@ class DayClassSchedulerServiceTest {
             .build();
 
     //when
-    dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm, seller.getEmail());
+    dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm, seller);
 
     CustomException customException =
         assertThrows(CustomException.class,
             () -> dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm,
-                seller.getEmail()));
+                seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.ALREADY_EXIST_DAYCLASS_SCHEDULER);
@@ -229,7 +229,7 @@ class DayClassSchedulerServiceTest {
     //when
     List<DayClassSchedulerDto> dayClassSchedulerDtoList =
         dayClassSchedulerService.getDayClassSchedulerByDayClassIdAndEmail(
-            dayClass.getId(), seller.getEmail(), Pageable.unpaged());
+            dayClass.getId(), seller, Pageable.unpaged());
 
     //then
     assertEquals(dayClassSchedulerDtoList.size(), 2);

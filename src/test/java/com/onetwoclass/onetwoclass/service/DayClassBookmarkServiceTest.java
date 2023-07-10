@@ -73,7 +73,7 @@ class DayClassBookmarkServiceTest {
         AddDayClassBookmarkForm.builder().dayClassId(dayClass.getId()).build();
 
     //when
-    dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer.getEmail());
+    dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer);
 
     List<DayClassBookmark> dayClassBookmarkList =
         dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
@@ -113,10 +113,10 @@ class DayClassBookmarkServiceTest {
         AddDayClassBookmarkForm.builder().dayClassId(dayClass.getId()).build();
 
     //when
-    dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer.getEmail());
+    dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer);
 
     CustomException customException = assertThrows(CustomException.class, () ->
-        dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer.getEmail()));
+        dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.ALREADY_EXIST_DAYCLASS_BOOKMARK);
@@ -173,7 +173,7 @@ class DayClassBookmarkServiceTest {
     List<DayClassBookmark> dayClassBookmarkList1 =
         dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
 
-    dayClassBookmarkService.deleteDayClassBookmark(deleteDayClassBookmarkForm, customer.getEmail());
+    dayClassBookmarkService.deleteDayClassBookmark(deleteDayClassBookmarkForm, customer);
 
     List<DayClassBookmark> dayClassBookmarkList2 =
         dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
@@ -229,7 +229,7 @@ class DayClassBookmarkServiceTest {
 
     //when
     List<DayClassBookmarkDto> dayClassBookmarkDtoList =
-        dayClassBookmarkService.getDayClassBookmark(customer.getEmail(), Pageable.unpaged());
+        dayClassBookmarkService.getDayClassBookmark(customer, Pageable.unpaged());
 
     //then
     assertEquals(dayClassBookmarkDtoList.size(), 2);

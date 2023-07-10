@@ -66,7 +66,7 @@ class DayClassServiceTest {
             .build();
 
     //when
-    dayClassService.addDayClass(addDayClassForm, seller.getEmail());
+    dayClassService.addDayClass(addDayClassForm, seller);
 
     DayClass dayClass = dayClassRepository.findAllByStoreId(store.getId()).get(0);
 
@@ -104,10 +104,10 @@ class DayClassServiceTest {
             .build();
 
     //when
-    dayClassService.addDayClass(addDayClassForm, seller.getEmail());
+    dayClassService.addDayClass(addDayClassForm, seller);
 
     CustomException customException = assertThrows(CustomException.class,
-        () -> dayClassService.addDayClass(addDayClassForm, seller.getEmail()));
+        () -> dayClassService.addDayClass(addDayClassForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.DUPLICATION_DAYCLASS_NAME);
@@ -148,7 +148,7 @@ class DayClassServiceTest {
         .build();
 
     //when
-    dayClassService.updateDayClass(updateDayClassForm, seller.getEmail());
+    dayClassService.updateDayClass(updateDayClassForm, seller);
 
     DayClass dayClass = dayClassRepository.findAllByStoreId(store.getId()).get(0);
 
@@ -194,7 +194,7 @@ class DayClassServiceTest {
 
     //when
     CustomException customException = assertThrows(CustomException.class,
-        () -> dayClassService.updateDayClass(updateDayClassForm, seller.getEmail()));
+        () -> dayClassService.updateDayClass(updateDayClassForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.DUPLICATION_DAYCLASS_NAME);
@@ -236,7 +236,7 @@ class DayClassServiceTest {
 
     //when
     CustomException customException = assertThrows(CustomException.class,
-        () -> dayClassService.updateDayClass(updateDayClassForm, seller.getEmail()));
+        () -> dayClassService.updateDayClass(updateDayClassForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.NOT_FOUND_DAYCLASS);
@@ -278,7 +278,7 @@ class DayClassServiceTest {
 
     //when
     List<DayClassDto> dayClassDtoList =
-        dayClassService.getDayClassByEmail(seller.getEmail(), Pageable.unpaged());
+        dayClassService.getDayClassBySeller(seller, Pageable.unpaged());
 
     //then
     assertEquals(dayClassDtoList.size(), 2);
@@ -314,7 +314,7 @@ class DayClassServiceTest {
         .dayClassName("마카롱 클래스").build();
 
     //when
-    dayClassService.deleteDayClass(deleteDayClassForm, seller.getEmail());
+    dayClassService.deleteDayClass(deleteDayClassForm, seller);
 
     CustomException customException =
         assertThrows(CustomException.class,
