@@ -1,10 +1,8 @@
 package com.onetwoclass.onetwoclass.controller.seller;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.dayclassscheduler.AddDayClassSchedulerForm;
 import com.onetwoclass.onetwoclass.service.DayClassSchedulerService;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

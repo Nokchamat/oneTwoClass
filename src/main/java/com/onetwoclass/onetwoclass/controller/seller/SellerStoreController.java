@@ -5,7 +5,6 @@ import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.store.AddStoreForm;
 import com.onetwoclass.onetwoclass.domain.form.store.UpdateStoreForm;
 import com.onetwoclass.onetwoclass.service.StoreService;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

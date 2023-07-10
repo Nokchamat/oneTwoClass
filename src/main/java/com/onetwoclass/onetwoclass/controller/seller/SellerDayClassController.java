@@ -1,12 +1,10 @@
 package com.onetwoclass.onetwoclass.controller.seller;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.dayclass.AddDayClassForm;
 import com.onetwoclass.onetwoclass.domain.form.dayclass.DeleteDayClassForm;
 import com.onetwoclass.onetwoclass.domain.form.dayclass.UpdateDayClassForm;
 import com.onetwoclass.onetwoclass.service.DayClassService;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

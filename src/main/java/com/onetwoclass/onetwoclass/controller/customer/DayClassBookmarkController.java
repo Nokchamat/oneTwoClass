@@ -1,11 +1,9 @@
 package com.onetwoclass.onetwoclass.controller.customer;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.dayclassbookmark.AddDayClassBookmarkForm;
 import com.onetwoclass.onetwoclass.domain.form.dayclassbookmark.DeleteDayClassBookmarkForm;
 import com.onetwoclass.onetwoclass.service.DayClassBookmarkService;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
