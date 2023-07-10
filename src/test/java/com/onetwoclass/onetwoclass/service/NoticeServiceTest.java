@@ -234,44 +234,35 @@ class NoticeServiceTest {
         .seller(seller2)
         .build());
 
-    Notice notice1 = noticeRepository.save(Notice.builder()
+    noticeRepository.save(Notice.builder()
         .subject("제목1")
         .text("텍스트1")
         .store(store1)
         .build());
 
-    Notice notice2 = noticeRepository.save(Notice.builder()
+    noticeRepository.save(Notice.builder()
         .subject("제목2")
         .text("텍스트1")
         .store(store1)
         .build());
 
-    Notice notice3 = noticeRepository.save(Notice.builder()
+    noticeRepository.save(Notice.builder()
         .subject("제목1")
         .text("텍스트2")
         .store(store2)
         .build());
 
-    Notice notice4 = noticeRepository.save(Notice.builder()
+    noticeRepository.save(Notice.builder()
         .subject("제목2")
         .text("텍스트2")
         .store(store2)
         .build());
 
-    Notice notice5 = noticeRepository.save(Notice.builder()
+    noticeRepository.save(Notice.builder()
         .subject("제목3")
         .text("텍스트2")
         .store(store2)
         .build());
-
-    System.out.println(store1.getId());
-    System.out.println(store2.getId());
-
-    System.out.println(notice1.getStore().getId());
-    System.out.println(notice2.getStore().getId());
-    System.out.println(notice3.getStore().getId());
-    System.out.println(notice4.getStore().getId());
-    System.out.println(notice5.getStore().getId());
 
     //when
     List<NoticeDto> noticeDtoList1 =
