@@ -18,11 +18,11 @@ import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
@@ -79,7 +79,8 @@ class DayClassSchedulerServiceTest {
     dayClassSchedulerService.addDayClassScheduler(addDayClassSchedulerForm, seller);
 
     DayClassScheduler dayClassScheduler =
-        dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId()).get(0);
+        dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId(), Pageable.unpaged())
+            .getContent().get(0);
 
     //then
     assertEquals(dayClassScheduler.getDayClass().getId(), addDayClassSchedulerForm.getDayClassId());
@@ -227,12 +228,12 @@ class DayClassSchedulerServiceTest {
         .build());
 
     //when
-    List<DayClassSchedulerDto> dayClassSchedulerDtoList =
+    Page<DayClassSchedulerDto> dayClassSchedulerDtoList =
         dayClassSchedulerService.getDayClassSchedulerByDayClassIdAndEmail(
             dayClass.getId(), seller, Pageable.unpaged());
 
     //then
-    assertEquals(dayClassSchedulerDtoList.size(), 2);
+    assertEquals(dayClassSchedulerDtoList.getTotalElements(), 2);
   }
 
   @Test
@@ -272,12 +273,12 @@ class DayClassSchedulerServiceTest {
         .build());
 
     //when
-    List<DayClassSchedulerDto> dayClassSchedulerDtoList =
+    Page<DayClassSchedulerDto> dayClassSchedulerDtoList =
         dayClassSchedulerService.getDayClassSchedulerByDayClassId(
             dayClass.getId(), Pageable.unpaged());
 
     //then
-    assertEquals(dayClassSchedulerDtoList.size(), 2);
+    assertEquals(dayClassSchedulerDtoList.getTotalElements(), 2);
   }
 
 

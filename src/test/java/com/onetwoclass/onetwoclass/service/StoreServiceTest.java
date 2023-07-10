@@ -221,7 +221,7 @@ class StoreServiceTest {
         .build());
 
     //when
-    List<StoreDto> storeDtoList = storeService.getAllStore(Pageable.ofSize(2));
+    List<StoreDto> storeDtoList = storeService.getAllStore(Pageable.ofSize(2)).getContent();
 
     //then
     assertEquals(storeDtoList.size(), 2);
@@ -245,7 +245,8 @@ class StoreServiceTest {
         .build());
 
     //when
-    List<StoreDto> storeDtoList = storeService.getAllStoreByName(Pageable.unpaged(), "2");
+    List<StoreDto> storeDtoList =
+        storeService.getAllStoreByName(Pageable.unpaged(), "2").getContent();
 
     //then
     assertEquals(storeDtoList.size(), 1);

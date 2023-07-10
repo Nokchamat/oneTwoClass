@@ -287,15 +287,15 @@ class ReviewServiceTest {
 
     //when
     Review review = reviewRepository.save(Review.builder()
-            .schedule(schedule)
-            .customer(customer)
-            .dayClass(dayClass)
-            .text("너무 맛있어요!")
-            .star(5)
+        .schedule(schedule)
+        .customer(customer)
+        .dayClass(dayClass)
+        .text("너무 맛있어요!")
+        .star(5)
         .build());
 
     List<ReviewDto> reviewDtoList =
-        reviewService.getReviewByCustomer(customer, Pageable.unpaged());
+        reviewService.getReviewByCustomer(customer, Pageable.unpaged()).getContent();
 
     //then
     assertEquals(reviewDtoList.get(0).getDayClassId(), review.getDayClass().getId());
@@ -360,7 +360,7 @@ class ReviewServiceTest {
         .build());
 
     List<ReviewDto> reviewDtoList =
-        reviewService.getReviewByDayClassId(dayClass.getId(), Pageable.unpaged());
+        reviewService.getReviewByDayClassId(dayClass.getId(), Pageable.unpaged()).getContent();
 
     //then
     assertEquals(reviewDtoList.get(0).getDayClassId(), review.getDayClass().getId());
@@ -368,7 +368,6 @@ class ReviewServiceTest {
     assertEquals(reviewDtoList.get(0).getText(), review.getText());
     assertEquals(reviewDtoList.get(0).getStar(), review.getStar());
   }
-
 
 
 }

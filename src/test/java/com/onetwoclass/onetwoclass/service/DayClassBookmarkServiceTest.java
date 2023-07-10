@@ -18,11 +18,11 @@ import com.onetwoclass.onetwoclass.repository.DayClassBookmarkRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
@@ -75,11 +75,11 @@ class DayClassBookmarkServiceTest {
     //when
     dayClassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm, customer);
 
-    List<DayClassBookmark> dayClassBookmarkList =
+    Page<DayClassBookmark> dayClassBookmarkList =
         dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
 
     //then
-    assertEquals(dayClassBookmarkList.size(), 1);
+    assertEquals(dayClassBookmarkList.getTotalElements(), 1);
 
   }
 
@@ -170,17 +170,17 @@ class DayClassBookmarkServiceTest {
         DeleteDayClassBookmarkForm.builder().dayClassBookmarkId(dayClassBookmark.getId()).build();
 
     //when
-    List<DayClassBookmark> dayClassBookmarkList1 =
+    Page<DayClassBookmark> dayClassBookmarkList1 =
         dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
 
     dayClassBookmarkService.deleteDayClassBookmark(deleteDayClassBookmarkForm, customer);
 
-    List<DayClassBookmark> dayClassBookmarkList2 =
+    Page<DayClassBookmark> dayClassBookmarkList2 =
         dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
 
     //then
-    assertEquals(dayClassBookmarkList1.size(), 2);
-    assertEquals(dayClassBookmarkList2.size(), 1);
+    assertEquals(dayClassBookmarkList1.getTotalElements(), 2);
+    assertEquals(dayClassBookmarkList2.getTotalElements(), 1);
 
   }
 
@@ -228,11 +228,11 @@ class DayClassBookmarkServiceTest {
         .build());
 
     //when
-    List<DayClassBookmarkDto> dayClassBookmarkDtoList =
+    Page<DayClassBookmarkDto> dayClassBookmarkDtoList =
         dayClassBookmarkService.getDayClassBookmark(customer, Pageable.unpaged());
 
     //then
-    assertEquals(dayClassBookmarkDtoList.size(), 2);
+    assertEquals(dayClassBookmarkDtoList.getTotalElements(), 2);
 
   }
 

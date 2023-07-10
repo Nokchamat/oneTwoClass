@@ -13,10 +13,9 @@ import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -53,13 +52,13 @@ public class ScheduleService {
 
   }
 
-  public List<ScheduleDto> getAllScheduleByCustomerEmail(Member customer, Pageable pageable) {
+  public Page<ScheduleDto> getAllScheduleByCustomerEmail(Member customer, Pageable pageable) {
 
     return scheduleRepository.findAllByCustomerId(customer.getId(), pageable)
-        .stream().map(Schedule::toScheduleDto).collect(Collectors.toList());
+        .map(Schedule::toScheduleDto);
   }
 
-  public List<ScheduleDto> getAllScheduleBySellerEmailAndDayClassSchedulerId(
+  public Page<ScheduleDto> getAllScheduleBySellerEmailAndDayClassSchedulerId(
       Member seller, Long dayClassSchedulerId, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
@@ -76,8 +75,7 @@ public class ScheduleService {
     }
 
     return scheduleRepository.findAllByDayClassSchedulerId(
-            dayClassScheduler.getId(), pageable)
-        .stream().map(Schedule::toScheduleDto).collect(Collectors.toList());
+        dayClassScheduler.getId(), pageable).map(Schedule::toScheduleDto);
   }
 
   @Transactional

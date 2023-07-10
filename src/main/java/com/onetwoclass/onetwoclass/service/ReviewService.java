@@ -15,9 +15,8 @@ import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
 import com.onetwoclass.onetwoclass.repository.ReviewRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -68,16 +67,16 @@ public class ReviewService {
 
   }
 
-  public List<ReviewDto> getReviewByCustomer(Member customer, Pageable pageable) {
+  public Page<ReviewDto> getReviewByCustomer(Member customer, Pageable pageable) {
 
     return reviewRepository.findAllByCustomerId(customer.getId(), pageable)
-        .stream().map(Review::toReviewDto).collect(Collectors.toList());
+        .map(Review::toReviewDto);
   }
 
-  public  List<ReviewDto> getReviewByDayClassId(Long dayClassId, Pageable pageable) {
+  public  Page<ReviewDto> getReviewByDayClassId(Long dayClassId, Pageable pageable) {
 
     return reviewRepository.findAllByDayClassId(dayClassId, pageable)
-        .stream().map(Review::toReviewDto).collect(Collectors.toList());
+        .map(Review::toReviewDto);
   }
 
 }

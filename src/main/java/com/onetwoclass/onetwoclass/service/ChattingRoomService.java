@@ -12,9 +12,8 @@ import com.onetwoclass.onetwoclass.repository.ChattingRepository;
 import com.onetwoclass.onetwoclass.repository.ChattingRoomRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -102,18 +101,16 @@ public class ChattingRoomService {
 
   }
 
-  public List<ChattingRoomDto> getChattingRoomByCustomer(Member customer, Pageable pageable) {
+  public Page<ChattingRoomDto> getChattingRoomByCustomer(Member customer, Pageable pageable) {
 
     return chattingRoomRepository.findAllByCustomerIdAndExitCustomerYnIsFalse(customer.getId(),
-            pageable)
-        .stream().map(ChattingRoom::toChattingRoomDto).collect(Collectors.toList());
+            pageable).map(ChattingRoom::toChattingRoomDto);
   }
 
-  public List<ChattingRoomDto> getChattingRoomBySeller(Member seller, Pageable pageable) {
+  public Page<ChattingRoomDto> getChattingRoomBySeller(Member seller, Pageable pageable) {
 
     return chattingRoomRepository.findAllBySellerIdAndExitSellerYnIsFalse(seller.getId(),
-            pageable)
-        .stream().map(ChattingRoom::toChattingRoomDto).collect(Collectors.toList());
+            pageable).map(ChattingRoom::toChattingRoomDto);
   }
 
 }

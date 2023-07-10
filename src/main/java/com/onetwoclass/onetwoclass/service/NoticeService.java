@@ -11,10 +11,9 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.NoticeRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -39,13 +38,12 @@ public class NoticeService {
   }
 
 
-  public List<NoticeDto> getNoticeBySellerEmail(Pageable pageable, Member seller) {
+  public Page<NoticeDto> getNoticeBySellerEmail(Pageable pageable, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    return noticeRepository.findAllByStoreId(store.getId(), pageable)
-        .stream().map(Notice::toNoticeDto).collect(Collectors.toList());
+    return noticeRepository.findAllByStoreId(store.getId(), pageable).map(Notice::toNoticeDto);
   }
 
   public void deleteNotice(DeleteNoticeForm deleteNoticeForm, Member seller) {
@@ -79,13 +77,13 @@ public class NoticeService {
     notice.updateNotice(updateNoticeForm);
   }
 
-  public List<NoticeDto> getNoticeByStoreId(Pageable pageable, Long storeId) {
+  public Page<NoticeDto> getNoticeByStoreId(Pageable pageable, Long storeId) {
 
     Store store = storeRepository.findById(storeId)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     return noticeRepository.findAllByStoreId(store.getId(), pageable)
-        .stream().map(Notice::toNoticeDto).collect(Collectors.toList());
+        .map(Notice::toNoticeDto);
   }
 
 }

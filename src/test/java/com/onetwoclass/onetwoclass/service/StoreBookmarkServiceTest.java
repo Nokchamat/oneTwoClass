@@ -150,7 +150,8 @@ class StoreBookmarkServiceTest {
 
     //when
     List<StoreBookmark> storeBookmarkList =
-        storeBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged());
+        storeBookmarkRepository.findAllByCustomerId(customer.getId(), Pageable.unpaged())
+            .getContent();
 
     //then
     assertEquals(storeBookmarkList.size(), 1);
@@ -195,7 +196,7 @@ class StoreBookmarkServiceTest {
 
     //when
     List<StoreBookmarkDto> storeBookmarkDtoList =
-        storeBookmarkService.getStoreBookmark(customer, Pageable.unpaged());
+        storeBookmarkService.getStoreBookmark(customer, Pageable.unpaged()).getContent();
 
     //then
     assertEquals(storeBookmarkDtoList.size(), 2);

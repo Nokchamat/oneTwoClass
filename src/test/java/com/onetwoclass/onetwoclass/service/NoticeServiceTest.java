@@ -16,12 +16,12 @@ import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.NoticeRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
@@ -65,12 +65,13 @@ class NoticeServiceTest {
 
     //when
     noticeService.addNotice(addNoticeForm, seller);
-    List<Notice> noticeList =
+
+    Page<Notice> noticeList =
         noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
 
     //then
-    assertEquals(noticeList.get(0).getSubject(), addNoticeForm.getSubject());
-    assertEquals(noticeList.get(0).getText(), addNoticeForm.getText());
+    assertEquals(noticeList.getContent().get(0).getSubject(), addNoticeForm.getSubject());
+    assertEquals(noticeList.getContent().get(0).getText(), addNoticeForm.getText());
   }
 
   @Test
@@ -105,11 +106,11 @@ class NoticeServiceTest {
         .build());
 
     //when
-    List<NoticeDto> noticeDtoList =
+    Page<NoticeDto> noticeDtoList =
         noticeService.getNoticeBySellerEmail(Pageable.unpaged(), seller);
 
     //then
-    assertEquals(noticeDtoList.size(), 2);
+    assertEquals(noticeDtoList.getTotalElements(), 2);
   }
 
   @Test
@@ -148,13 +149,13 @@ class NoticeServiceTest {
         .build();
 
     //when
-    List<Notice> noticeList1 = noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
+    Page<Notice> noticeList1 = noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
     noticeService.deleteNotice(deleteNoticeForm, seller);
-    List<Notice> noticeList2 = noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
+    Page<Notice> noticeList2 = noticeRepository.findAllByStoreId(store.getId(), Pageable.unpaged());
 
     //then
-    assertEquals(noticeList1.size(), 2);
-    assertEquals(noticeList2.size(), 1);
+    assertEquals(noticeList1.getTotalElements(), 2);
+    assertEquals(noticeList2.getTotalElements(), 1);
   }
 
   @Test
@@ -265,18 +266,18 @@ class NoticeServiceTest {
         .build());
 
     //when
-    List<NoticeDto> noticeDtoList1 =
+    Page<NoticeDto> noticeDtoList1 =
         noticeService.getNoticeByStoreId(Pageable.unpaged(), store1.getId());
 
-    List<NoticeDto> noticeDtoList2 =
+    Page<NoticeDto> noticeDtoList2 =
         noticeService.getNoticeByStoreId(Pageable.unpaged(), store2.getId());
 
 
 
 
     //then
-    assertEquals(noticeDtoList1.size(), 2);
-    assertEquals(noticeDtoList2.size(), 3);
+    assertEquals(noticeDtoList1.getTotalElements(), 2);
+    assertEquals(noticeDtoList2.getTotalElements(), 3);
 
   }
 

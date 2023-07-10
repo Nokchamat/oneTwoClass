@@ -9,10 +9,9 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -48,14 +47,12 @@ public class StoreService {
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     store.updateStore(updateStoreForm);
-
   }
 
   public StoreDto getStoreBySeller(Member seller) {
 
-    return Store.toStoreDto(
-        storeRepository.findBySellerId(seller.getId())
-            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE)));
+    return Store.toStoreDto(storeRepository.findBySellerId(seller.getId())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE)));
   }
 
   public void deleteStore(Member seller) {
@@ -70,14 +67,12 @@ public class StoreService {
     storeRepository.delete(store);
   }
 
-  public List<StoreDto> getAllStore(Pageable pageable) {
-    return storeRepository.findAll(pageable)
-        .stream().map(Store::toStoreDto).collect(Collectors.toList());
+  public Page<StoreDto> getAllStore(Pageable pageable) {
+    return storeRepository.findAll(pageable).map(Store::toStoreDto);
   }
 
-  public List<StoreDto> getAllStoreByName(Pageable pageable, String name) {
-    return storeRepository.findAllByStoreNameContaining(pageable, name)
-        .stream().map(Store::toStoreDto).collect(Collectors.toList());
+  public Page<StoreDto> getAllStoreByName(Pageable pageable, String name) {
+    return storeRepository.findAllByStoreNameContaining(pageable, name).map(Store::toStoreDto);
   }
 
 }

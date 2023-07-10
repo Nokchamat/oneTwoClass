@@ -11,10 +11,9 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -68,15 +67,13 @@ public class DayClassService {
 
   }
 
-  public List<DayClassDto> getDayClassBySeller(Member seller, Pageable pageable) {
+  public Page<DayClassDto> getDayClassBySeller(Member seller, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     return dayClassRepository.findAllByStoreId(store.getId(), pageable)
-        .stream().map(DayClass::toDayClassDto)
-        .collect(Collectors.toList());
-
+        .map(DayClass::toDayClassDto);
   }
 
   public void deleteDayClass(DeleteDayClassForm deleteDayClassForm, Member seller) {
@@ -92,19 +89,18 @@ public class DayClassService {
     dayClassRepository.delete(dayclass);
   }
 
-  public List<DayClassDto> getAllDayClass(Pageable pageable) {
-    return dayClassRepository.findAll(pageable).stream()
-        .map(DayClass::toDayClassDto).collect(Collectors.toList());
+  public Page<DayClassDto> getAllDayClass(Pageable pageable) {
+    return dayClassRepository.findAll(pageable).map(DayClass::toDayClassDto);
   }
 
-  public List<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
+  public Page<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
     return dayClassRepository.findAllByDayClassNameContaining(dayClassName, pageable)
-        .stream().map(DayClass::toDayClassDto).collect(Collectors.toList());
+        .map(DayClass::toDayClassDto);
   }
 
-  public List<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
+  public Page<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
     return dayClassRepository.findAllByStoreId(storeId, pageable)
-        .stream().map(DayClass::toDayClassDto).collect(Collectors.toList());
+        .map(DayClass::toDayClassDto);
   }
 
 }

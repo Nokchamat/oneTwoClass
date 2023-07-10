@@ -225,7 +225,7 @@ class ScheduleServiceTest {
 
     //when
     List<ScheduleDto> scheduleDtoList = scheduleService.getAllScheduleByCustomerEmail(
-        customer, Pageable.unpaged());
+        customer, Pageable.unpaged()).getContent();
 
     //then
     assertEquals(scheduleDtoList.size(), 2);
@@ -296,7 +296,7 @@ class ScheduleServiceTest {
 
     //when
     List<ScheduleDto> scheduleDtoList = scheduleService.getAllScheduleBySellerEmailAndDayClassSchedulerId(
-        seller, dayClassScheduler.getId(), Pageable.unpaged());
+        seller, dayClassScheduler.getId(), Pageable.unpaged()).getContent();
 
     //then
     assertEquals(scheduleDtoList.size(), 2);
