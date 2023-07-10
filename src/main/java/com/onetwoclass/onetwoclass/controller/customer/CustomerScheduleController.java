@@ -4,6 +4,7 @@ import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.form.schedule.RequestScheduleForm;
 import com.onetwoclass.onetwoclass.service.ScheduleService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class CustomerScheduleController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> requestSchedule(@RequestBody RequestScheduleForm requestScheduleForm,
+  ResponseEntity<?> requestSchedule(@RequestBody @Valid RequestScheduleForm requestScheduleForm,
       HttpServletRequest request) {
 
     scheduleService.requestSchedule(requestScheduleForm,

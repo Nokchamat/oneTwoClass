@@ -5,6 +5,7 @@ import com.onetwoclass.onetwoclass.domain.form.dayclassbookmark.AddDayClassBookm
 import com.onetwoclass.onetwoclass.domain.form.dayclassbookmark.DeleteDayClassBookmarkForm;
 import com.onetwoclass.onetwoclass.service.DayClassBookmarkService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,8 @@ public class DayClassBookmarkController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> addDayClassBookmark(@RequestBody AddDayClassBookmarkForm addDayClassBookmarkForm,
+  ResponseEntity<?> addDayClassBookmark(
+      @RequestBody @Valid AddDayClassBookmarkForm addDayClassBookmarkForm,
       HttpServletRequest request) {
 
     dayclassBookmarkService.addDayClassBookmark(addDayClassBookmarkForm,
@@ -36,7 +38,7 @@ public class DayClassBookmarkController {
 
   @DeleteMapping
   ResponseEntity<?> deleteDayClassBookmark(
-      @RequestBody DeleteDayClassBookmarkForm deleteDayClassBookmarkForm,
+      @RequestBody @Valid DeleteDayClassBookmarkForm deleteDayClassBookmarkForm,
       HttpServletRequest request) {
 
     dayclassBookmarkService.deleteDayClassBookmark(deleteDayClassBookmarkForm,

@@ -50,7 +50,7 @@ public class ReviewService {
     DayClass dayClass = dayClassRepository.findById(dayClassScheduler.getDayClass().getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    if (!schedule.getAcceptYn()) {
+    if (!schedule.getAcceptYn() || !dayClassScheduler.getScheduledDate().isBefore(LocalDateTime.now())) {
       throw new CustomException(ErrorCode.NOT_VISITED_DAYCLASS);
     }
 

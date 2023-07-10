@@ -44,16 +44,15 @@ public class ScheduleService {
         dayClassSchedulerRepository.findById(requestScheduleForm.getDayClassSchedulerId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    scheduleRepository.findByCustomerIdAndDayClassSchedulerIdAndRequestedDateTime(
-            customer.getId(), requestScheduleForm.getDayClassSchedulerId(),
-            requestScheduleForm.getRequestedDateTime())
+    scheduleRepository.findByCustomerIdAndDayClassSchedulerId(
+            customer.getId(), requestScheduleForm.getDayClassSchedulerId())
         .ifPresent(a -> {
           throw new CustomException(ErrorCode.ALREADY_REQUESTED_SCHEDULE);
         });
 
     scheduleRepository.save(Schedule.builder()
         .dayClassScheduler(dayClassScheduler)
-        .requestedDateTime(requestScheduleForm.getRequestedDateTime())
+        .requestedDateTime(dayClassScheduler.getScheduledDate())
         .customer(customer)
         .acceptYn(false)
         .build());

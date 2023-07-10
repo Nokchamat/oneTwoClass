@@ -35,7 +35,7 @@ public class SellerStoreController {
   }
 
   @PutMapping
-  ResponseEntity<?> updateStore(@RequestBody UpdateStoreForm updateStoreForm,
+  ResponseEntity<?> updateStore(@RequestBody @Valid UpdateStoreForm updateStoreForm,
       HttpServletRequest request) {
 
     storeService.updateStore(updateStoreForm,

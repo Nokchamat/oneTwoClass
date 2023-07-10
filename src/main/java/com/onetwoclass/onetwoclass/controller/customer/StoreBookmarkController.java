@@ -5,6 +5,7 @@ import com.onetwoclass.onetwoclass.domain.form.storebookmark.AddStoreBookmarkFor
 import com.onetwoclass.onetwoclass.domain.form.storebookmark.DeleteStoreBookmarkForm;
 import com.onetwoclass.onetwoclass.service.StoreBookmarkService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class StoreBookmarkController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> addStoreBookmark(@RequestBody AddStoreBookmarkForm addStoreBookmarkForm,
+  ResponseEntity<?> addStoreBookmark(@RequestBody @Valid AddStoreBookmarkForm addStoreBookmarkForm,
       HttpServletRequest request) {
 
     storeBookmarkService.addStoreBookmark(addStoreBookmarkForm,
@@ -36,7 +37,7 @@ public class StoreBookmarkController {
 
   @DeleteMapping
   ResponseEntity<?> deleteStoreBookmark(
-      @RequestBody DeleteStoreBookmarkForm deleteStoreBookmarkForm,
+      @RequestBody @Valid DeleteStoreBookmarkForm deleteStoreBookmarkForm,
       HttpServletRequest request) {
 
     storeBookmarkService.deleteStoreBookmark(deleteStoreBookmarkForm,

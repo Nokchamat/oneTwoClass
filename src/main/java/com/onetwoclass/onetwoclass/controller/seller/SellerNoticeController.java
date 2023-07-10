@@ -6,6 +6,7 @@ import com.onetwoclass.onetwoclass.domain.form.notice.DeleteNoticeForm;
 import com.onetwoclass.onetwoclass.domain.form.notice.UpdateNoticeForm;
 import com.onetwoclass.onetwoclass.service.NoticeService;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class SellerNoticeController {
   private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
-  ResponseEntity<?> addNotice(@RequestBody AddNoticeForm addNoticeForm,
+  ResponseEntity<?> addNotice(@RequestBody @Valid AddNoticeForm addNoticeForm,
       HttpServletRequest request) {
 
     noticeService.addNotice(addNoticeForm,
@@ -44,7 +45,7 @@ public class SellerNoticeController {
   }
 
   @DeleteMapping
-  ResponseEntity<?> deleteNotice(@RequestBody DeleteNoticeForm deleteNoticeForm,
+  ResponseEntity<?> deleteNotice(@RequestBody @Valid DeleteNoticeForm deleteNoticeForm,
       HttpServletRequest request) {
 
     noticeService.deleteNotice(deleteNoticeForm,
@@ -54,7 +55,8 @@ public class SellerNoticeController {
   }
 
   @PutMapping
-  ResponseEntity<?> updateNotice(@RequestBody UpdateNoticeForm updateNoticeForm, HttpServletRequest request) {
+  ResponseEntity<?> updateNotice(@RequestBody @Valid UpdateNoticeForm updateNoticeForm,
+      HttpServletRequest request) {
 
     noticeService.updateNotice(updateNoticeForm,
         jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
