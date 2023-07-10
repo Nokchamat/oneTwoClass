@@ -25,8 +25,6 @@ public class DayClassBookmarkService {
 
   private final DayClassBookmarkRepository dayClassBookmarkRepository;
 
-  private final MemberRepository memberRepository;
-
   public void addDayClassBookmark(AddDayClassBookmarkForm addDayClassBookmarkForm, Member customer) {
 
     DayClass dayClass = dayClassRepository.findById(addDayClassBookmarkForm.getDayClassId())

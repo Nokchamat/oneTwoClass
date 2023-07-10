@@ -136,7 +136,7 @@ class StoreBookmarkServiceTest {
         .store(store)
         .build());
 
-    StoreBookmark storeBookmark2 = storeBookmarkRepository.save(StoreBookmark.builder()
+    storeBookmarkRepository.save(StoreBookmark.builder()
         .customer(customer)
         .store(store2)
         .build());
@@ -183,12 +183,12 @@ class StoreBookmarkServiceTest {
         .seller(customer)
         .build());
 
-    StoreBookmark storeBookmark = storeBookmarkRepository.save(StoreBookmark.builder()
+    storeBookmarkRepository.save(StoreBookmark.builder()
         .customer(customer)
         .store(store)
         .build());
 
-    StoreBookmark storeBookmark2 = storeBookmarkRepository.save(StoreBookmark.builder()
+    storeBookmarkRepository.save(StoreBookmark.builder()
         .customer(customer)
         .store(store2)
         .build());

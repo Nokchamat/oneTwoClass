@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SellerStoreController {
 
   private final StoreService storeService;
-  private final JwtTokenProvider jwtTokenProvider;
 
   @PostMapping
   ResponseEntity<?> addStore(@RequestBody @Valid AddStoreForm addStoreForm,

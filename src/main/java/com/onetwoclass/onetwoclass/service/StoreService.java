@@ -23,8 +23,6 @@ public class StoreService {
 
   private final StoreRepository storeRepository;
 
-  private final MemberRepository memberRepository;
-
   private final DayClassRepository dayClassRepository;
 
   @Transactional

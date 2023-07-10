@@ -26,8 +26,6 @@ public class SellerNoticeController {
 
   private final NoticeService noticeService;
 
-  private final JwtTokenProvider jwtTokenProvider;
-
   @PostMapping
   ResponseEntity<?> addNotice(@RequestBody @Valid AddNoticeForm addNoticeForm,
       @AuthenticationPrincipal Member seller) {

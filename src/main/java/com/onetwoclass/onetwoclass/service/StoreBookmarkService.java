@@ -25,8 +25,6 @@ public class StoreBookmarkService {
 
   private final StoreRepository storeRepository;
 
-  private final MemberRepository memberRepository;
-
   public void addStoreBookmark(AddStoreBookmarkForm addStoreBookmarkForm, Member customer) {
 
     Store store = storeRepository.findById(addStoreBookmarkForm.getStoreId())

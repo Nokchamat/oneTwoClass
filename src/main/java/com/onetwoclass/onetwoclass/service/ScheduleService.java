@@ -27,8 +27,6 @@ public class ScheduleService {
 
   private final ScheduleRepository scheduleRepository;
 
-  private final MemberRepository memberRepository;
-
   private final StoreRepository storeRepository;
 
   private final DayClassRepository dayClassRepository;

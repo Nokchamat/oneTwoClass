@@ -28,8 +28,6 @@ public class ReviewService {
 
   private final ReviewRepository reviewRepository;
 
-  private final MemberRepository memberRepository;
-
   private final DayClassRepository dayClassRepository;
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;

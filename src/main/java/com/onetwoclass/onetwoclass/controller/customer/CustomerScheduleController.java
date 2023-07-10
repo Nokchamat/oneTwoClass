@@ -22,8 +22,6 @@ public class CustomerScheduleController {
 
   private final ScheduleService scheduleService;
 
-  private final JwtTokenProvider jwtTokenProvider;
-
   @PostMapping
   ResponseEntity<?> requestSchedule(@RequestBody @Valid RequestScheduleForm requestScheduleForm,
       @AuthenticationPrincipal Member customer) {
