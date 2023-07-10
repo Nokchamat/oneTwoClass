@@ -1,6 +1,5 @@
 package com.onetwoclass.onetwoclass.controller.customer;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.schedule.RequestScheduleForm;
 import com.onetwoclass.onetwoclass.service.ScheduleService;

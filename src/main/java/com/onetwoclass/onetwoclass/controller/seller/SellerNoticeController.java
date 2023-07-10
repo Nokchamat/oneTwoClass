@@ -1,6 +1,5 @@
 package com.onetwoclass.onetwoclass.controller.seller;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.notice.AddNoticeForm;
 import com.onetwoclass.onetwoclass.domain.form.notice.DeleteNoticeForm;

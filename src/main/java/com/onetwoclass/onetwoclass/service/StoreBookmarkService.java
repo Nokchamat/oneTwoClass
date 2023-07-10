@@ -8,7 +8,6 @@ import com.onetwoclass.onetwoclass.domain.form.storebookmark.AddStoreBookmarkFor
 import com.onetwoclass.onetwoclass.domain.form.storebookmark.DeleteStoreBookmarkForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreBookmarkRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import java.util.List;
