@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.domain.form.dayclassbookmark;
+package com.onetwoclass.onetwoclass.domain.form.notice;
 
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Builder
-public class AddDayClassBookmarkForm {
+public class DeleteNoticeForm {
 
-  @NotNull(message = "추가할 데이클래스 아이디를 기재해주세요.")
-  private Long dayClassId;
+  @NotNull(message = "삭제할 공지사항 id를 기재해주세요.")
+  private Long noticeId;
 
 }

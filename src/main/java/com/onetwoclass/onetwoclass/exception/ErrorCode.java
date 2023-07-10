@@ -39,7 +39,9 @@ public enum ErrorCode {
 
   ACCESS_DENIED(HttpStatus.FORBIDDEN, "잘못된 접근입니다."),
   WRONG_TYPE_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 토큰입니다."),
-  EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "만료된 토큰입니다.");
+  EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "만료된 토큰입니다."),
+
+  NOT_FOUND_NOTICE(HttpStatus.BAD_REQUEST, "공지사항이 존재하지 않습니다.");
 
 
   private final HttpStatus httpStatus;
