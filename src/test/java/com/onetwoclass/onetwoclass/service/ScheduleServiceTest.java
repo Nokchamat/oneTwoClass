@@ -92,20 +92,19 @@ class ScheduleServiceTest {
 
     RequestScheduleForm requestScheduleForm = RequestScheduleForm.builder()
         .dayClassSchedulerId(dayClassScheduler.getId())
-        .requestedDateTime(dayClassScheduler.getScheduledDate())
         .build();
 
     //when
     scheduleService.requestSchedule(requestScheduleForm, customer.getEmail());
 
     Schedule schedule =
-        scheduleRepository.findByCustomerIdAndDayClassSchedulerIdAndRequestedDateTime(
-                customer.getId(), dayClassScheduler.getId(), requestScheduleForm.getRequestedDateTime())
+        scheduleRepository.findByCustomerIdAndDayClassSchedulerId(
+                customer.getId(), dayClassScheduler.getId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
     //then
     assertEquals(schedule.getCustomer().getId(), customer.getId());
-    assertEquals(schedule.getRequestedDateTime(), requestScheduleForm.getRequestedDateTime());
+    assertEquals(schedule.getRequestedDateTime(), dayClassScheduler.getScheduledDate());
 
   }
 
@@ -151,7 +150,6 @@ class ScheduleServiceTest {
 
     RequestScheduleForm requestScheduleForm = RequestScheduleForm.builder()
         .dayClassSchedulerId(dayClassScheduler.getId())
-        .requestedDateTime(dayClassScheduler.getScheduledDate())
         .build();
 
     //when

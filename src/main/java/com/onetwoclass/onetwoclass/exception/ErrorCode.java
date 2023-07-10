@@ -44,6 +44,11 @@ public enum ErrorCode {
 
   ALREADY_EXIST_REVIEW(HttpStatus.BAD_REQUEST, "이미 작성된 리뷰가 존재합니다."),
 
+  ALREADY_EXIST_CHATTINGROOM(HttpStatus.BAD_REQUEST, "이미 생성된 채팅방이 존재합니다."),
+  NOT_FOUND_CHATTINGROOM(HttpStatus.BAD_REQUEST, "채팅방이 존재하지 않습니다."),
+
+  NOT_EXIST_OTHERS(HttpStatus.BAD_REQUEST, "상대방이 채팅방에 존재하지 않습니다."),
+
   NOT_FOUND_NOTICE(HttpStatus.BAD_REQUEST, "공지사항이 존재하지 않습니다.");
 
 
