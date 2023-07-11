@@ -9,9 +9,8 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.ChattingRepository;
 import com.onetwoclass.onetwoclass.repository.ChattingRoomRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +40,7 @@ public class ChattingService {
 
   }
 
-  public List<ChattingDto> getCustomerChattingByChattingRoomId(
+  public Page<ChattingDto> getCustomerChattingByChattingRoomId(
       Long chattingRoomId, Member customer, Pageable pageable) {
 
     ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
@@ -52,10 +51,10 @@ public class ChattingService {
     }
 
     return chattingRepository.findAllByChattingRoomId(chattingRoomId, pageable)
-        .stream().map(Chatting::toChattingDto).collect(Collectors.toList());
+        .map(Chatting::toChattingDto);
   }
 
-  public List<ChattingDto> getSellerChattingByChattingRoomId(
+  public Page<ChattingDto> getSellerChattingByChattingRoomId(
       Long chattingRoomId, Member seller, Pageable pageable) {
 
     ChattingRoom chattingRoom = chattingRoomRepository.findById(chattingRoomId)
@@ -66,6 +65,6 @@ public class ChattingService {
     }
 
     return chattingRepository.findAllByChattingRoomId(chattingRoomId, pageable)
-        .stream().map(Chatting::toChattingDto).collect(Collectors.toList());
+        .map(Chatting::toChattingDto);
   }
 }

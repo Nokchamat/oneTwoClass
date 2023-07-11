@@ -11,13 +11,11 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +25,13 @@ public class ScheduleService {
 
   private final ScheduleRepository scheduleRepository;
 
-  private final MemberRepository memberRepository;
-
   private final StoreRepository storeRepository;
 
   private final DayClassRepository dayClassRepository;
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
-  public void requestSchedule(RequestScheduleForm requestScheduleForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void requestSchedule(RequestScheduleForm requestScheduleForm, Member customer) {
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.findById(requestScheduleForm.getDayClassSchedulerId())
@@ -59,20 +52,14 @@ public class ScheduleService {
 
   }
 
-  public List<ScheduleDto> getAllScheduleByCustomerEmail(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<ScheduleDto> getAllScheduleByCustomerEmail(Member customer, Pageable pageable) {
 
     return scheduleRepository.findAllByCustomerId(customer.getId(), pageable)
-        .stream().map(Schedule::toScheduleDto).collect(Collectors.toList());
+        .map(Schedule::toScheduleDto);
   }
 
-  public List<ScheduleDto> getAllScheduleBySellerEmailAndDayClassSchedulerId(
-      String email, Long dayClassSchedulerId, Pageable pageable) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<ScheduleDto> getAllScheduleBySellerEmailAndDayClassSchedulerId(
+      Member seller, Long dayClassSchedulerId, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -88,15 +75,11 @@ public class ScheduleService {
     }
 
     return scheduleRepository.findAllByDayClassSchedulerId(
-            dayClassScheduler.getId(), pageable)
-        .stream().map(Schedule::toScheduleDto).collect(Collectors.toList());
+        dayClassScheduler.getId(), pageable).map(Schedule::toScheduleDto);
   }
 
   @Transactional
-  public void acceptScheduleRequest(String email, Long scheduleId) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void acceptScheduleRequest(Member seller, Long scheduleId) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));

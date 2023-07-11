@@ -10,11 +10,9 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +22,11 @@ public class DayClassSchedulerService {
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
-  private final MemberRepository memberRepository;
-
   private final StoreRepository storeRepository;
 
   private final DayClassRepository dayClassRepository;
 
-  public void addDayClassScheduler(AddDayClassSchedulerForm addScheduleForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addDayClassScheduler(AddDayClassSchedulerForm addScheduleForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -59,11 +52,8 @@ public class DayClassSchedulerService {
 
   }
 
-  public List<DayClassSchedulerDto> getDayClassSchedulerByDayClassIdAndEmail(Long dayClassId,
-      String email, Pageable pageable) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<DayClassSchedulerDto> getDayClassSchedulerByDayClassIdAndEmail(Long dayClassId,
+      Member seller, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -75,19 +65,15 @@ public class DayClassSchedulerService {
       throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
     }
 
-    List<DayClassScheduler> dayClassSchedulerList
-        = dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId(), pageable);
-
-    return dayClassSchedulerList.stream()
-        .map(DayClassScheduler::toDayClassSchedulerDto)
-        .collect(Collectors.toList());
+    return dayClassSchedulerRepository.findAllByDayClassId(dayClass.getId(), pageable)
+        .map(DayClassScheduler::toDayClassSchedulerDto);
   }
 
-  public List<DayClassSchedulerDto> getDayClassSchedulerByDayClassId(
+  public Page<DayClassSchedulerDto> getDayClassSchedulerByDayClassId(
       Long dayClassId, Pageable pageable) {
 
     return dayClassSchedulerRepository.findAllByDayClassId(dayClassId, pageable)
-        .stream().map(DayClassScheduler::toDayClassSchedulerDto).collect(Collectors.toList());
+        .map(DayClassScheduler::toDayClassSchedulerDto);
   }
 
 }

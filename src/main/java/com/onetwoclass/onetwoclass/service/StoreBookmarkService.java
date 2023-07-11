@@ -8,12 +8,10 @@ import com.onetwoclass.onetwoclass.domain.form.storebookmark.AddStoreBookmarkFor
 import com.onetwoclass.onetwoclass.domain.form.storebookmark.DeleteStoreBookmarkForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreBookmarkRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +23,7 @@ public class StoreBookmarkService {
 
   private final StoreRepository storeRepository;
 
-  private final MemberRepository memberRepository;
-
-  public void addStoreBookmark(AddStoreBookmarkForm addStoreBookmarkForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addStoreBookmark(AddStoreBookmarkForm addStoreBookmarkForm, Member customer) {
 
     Store store = storeRepository.findById(addStoreBookmarkForm.getStoreId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -47,10 +40,8 @@ public class StoreBookmarkService {
 
   }
 
-  public void deleteStoreBookmark(DeleteStoreBookmarkForm deleteStoreBookmarkForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void deleteStoreBookmark(DeleteStoreBookmarkForm deleteStoreBookmarkForm,
+      Member customer) {
 
     StoreBookmark storeBookmark =
         storeBookmarkRepository.findById(deleteStoreBookmarkForm.getStoreBookmarkId())
@@ -64,13 +55,10 @@ public class StoreBookmarkService {
 
   }
 
-  public List<StoreBookmarkDto> getStoreBookmark(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<StoreBookmarkDto> getStoreBookmark(Member customer, Pageable pageable) {
 
     return storeBookmarkRepository.findAllByCustomerId(customer.getId(), pageable)
-        .stream().map(StoreBookmark::toStoreBookmarkDto).collect(Collectors.toList());
+        .map(StoreBookmark::toStoreBookmarkDto);
   }
 
 }

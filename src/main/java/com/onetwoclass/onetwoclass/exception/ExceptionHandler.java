@@ -1,13 +1,11 @@
 package com.onetwoclass.onetwoclass.exception;
 
 import com.onetwoclass.onetwoclass.exception.CustomException.CustomExceptionResponse;
-import io.jsonwebtoken.ExpiredJwtException;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

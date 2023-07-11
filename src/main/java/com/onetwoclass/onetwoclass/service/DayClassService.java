@@ -10,12 +10,10 @@ import com.onetwoclass.onetwoclass.domain.form.dayclass.UpdateDayClassForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +21,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DayClassService {
 
-  private final MemberRepository memberRepository;
-
   private final StoreRepository storeRepository;
 
   private final DayClassRepository dayClassRepository;
 
   @Transactional
-  public void addDayClass(AddDayClassForm addDayClassForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addDayClass(AddDayClassForm addDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -55,10 +48,7 @@ public class DayClassService {
 
 
   @Transactional
-  public void updateDayClass(UpdateDayClassForm updateDayClassForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void updateDayClass(UpdateDayClassForm updateDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -77,24 +67,16 @@ public class DayClassService {
 
   }
 
-  public List<DayClassDto> getDayClassByEmail(String email, Pageable pageable) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<DayClassDto> getDayClassBySeller(Member seller, Pageable pageable) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     return dayClassRepository.findAllByStoreId(store.getId(), pageable)
-        .stream().map(DayClass::toDayClassDto)
-        .collect(Collectors.toList());
-
+        .map(DayClass::toDayClassDto);
   }
 
-  public void deleteDayClass(DeleteDayClassForm deleteDayClassForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void deleteDayClass(DeleteDayClassForm deleteDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -107,19 +89,18 @@ public class DayClassService {
     dayClassRepository.delete(dayclass);
   }
 
-  public List<DayClassDto> getAllDayClass(Pageable pageable) {
-    return dayClassRepository.findAll(pageable).stream()
-        .map(DayClass::toDayClassDto).collect(Collectors.toList());
+  public Page<DayClassDto> getAllDayClass(Pageable pageable) {
+    return dayClassRepository.findAll(pageable).map(DayClass::toDayClassDto);
   }
 
-  public List<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
+  public Page<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
     return dayClassRepository.findAllByDayClassNameContaining(dayClassName, pageable)
-        .stream().map(DayClass::toDayClassDto).collect(Collectors.toList());
+        .map(DayClass::toDayClassDto);
   }
 
-  public List<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
+  public Page<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
     return dayClassRepository.findAllByStoreId(storeId, pageable)
-        .stream().map(DayClass::toDayClassDto).collect(Collectors.toList());
+        .map(DayClass::toDayClassDto);
   }
 
 }

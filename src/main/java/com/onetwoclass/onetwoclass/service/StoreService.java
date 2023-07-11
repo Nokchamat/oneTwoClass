@@ -8,12 +8,10 @@ import com.onetwoclass.onetwoclass.domain.form.store.UpdateStoreForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +21,10 @@ public class StoreService {
 
   private final StoreRepository storeRepository;
 
-  private final MemberRepository memberRepository;
-
   private final DayClassRepository dayClassRepository;
 
   @Transactional
-  public void addStore(AddStoreForm addStoreForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addStore(AddStoreForm addStoreForm, Member seller) {
 
     storeRepository.findBySellerId(seller.getId())
         .ifPresent(
@@ -48,32 +41,21 @@ public class StoreService {
   }
 
   @Transactional
-  public void updateStore(UpdateStoreForm updateStoreForm, String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void updateStore(UpdateStoreForm updateStoreForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     store.updateStore(updateStoreForm);
-
   }
 
-  public StoreDto getStoreByEmail(String email) {
+  public StoreDto getStoreBySeller(Member seller) {
 
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
-    return Store.toStoreDto(
-        storeRepository.findBySellerId(seller.getId())
-            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE)));
+    return Store.toStoreDto(storeRepository.findBySellerId(seller.getId())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE)));
   }
 
-  public void deleteStore(String email) {
-
-    Member seller = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void deleteStore(Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -85,14 +67,12 @@ public class StoreService {
     storeRepository.delete(store);
   }
 
-  public List<StoreDto> getAllStore(Pageable pageable) {
-    return storeRepository.findAll(pageable)
-        .stream().map(Store::toStoreDto).collect(Collectors.toList());
+  public Page<StoreDto> getAllStore(Pageable pageable) {
+    return storeRepository.findAll(pageable).map(Store::toStoreDto);
   }
 
-  public List<StoreDto> getAllStoreByName(Pageable pageable, String name) {
-    return storeRepository.findAllByStoreNameContaining(pageable, name)
-        .stream().map(Store::toStoreDto).collect(Collectors.toList());
+  public Page<StoreDto> getAllStoreByName(Pageable pageable, String name) {
+    return storeRepository.findAllByStoreNameContaining(pageable, name).map(Store::toStoreDto);
   }
 
 }

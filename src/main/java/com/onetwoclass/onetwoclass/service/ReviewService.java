@@ -12,12 +12,11 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.ReviewRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +26,13 @@ public class ReviewService {
 
   private final ReviewRepository reviewRepository;
 
-  private final MemberRepository memberRepository;
-
   private final DayClassRepository dayClassRepository;
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
   private final ScheduleRepository scheduleRepository;
 
-  public void addReview(AddReviewForm addReviewForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addReview(AddReviewForm addReviewForm, Member customer) {
 
     Schedule schedule = scheduleRepository.findById(addReviewForm.getScheduleId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
@@ -73,19 +67,16 @@ public class ReviewService {
 
   }
 
-  public List<ReviewDto> getReviewByCustomerEmail(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<ReviewDto> getReviewByCustomer(Member customer, Pageable pageable) {
 
     return reviewRepository.findAllByCustomerId(customer.getId(), pageable)
-        .stream().map(Review::toReviewDto).collect(Collectors.toList());
+        .map(Review::toReviewDto);
   }
 
-  public  List<ReviewDto> getReviewByDayClassId(Long dayClassId, Pageable pageable) {
+  public  Page<ReviewDto> getReviewByDayClassId(Long dayClassId, Pageable pageable) {
 
     return reviewRepository.findAllByDayClassId(dayClassId, pageable)
-        .stream().map(Review::toReviewDto).collect(Collectors.toList());
+        .map(Review::toReviewDto);
   }
 
 }

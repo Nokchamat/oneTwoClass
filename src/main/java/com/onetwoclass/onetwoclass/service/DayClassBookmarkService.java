@@ -10,10 +10,8 @@ import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassBookmarkRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
-import com.onetwoclass.onetwoclass.repository.MemberRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +23,8 @@ public class DayClassBookmarkService {
 
   private final DayClassBookmarkRepository dayClassBookmarkRepository;
 
-  private final MemberRepository memberRepository;
-
-  public void addDayClassBookmark(AddDayClassBookmarkForm addDayClassBookmarkForm, String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public void addDayClassBookmark(AddDayClassBookmarkForm addDayClassBookmarkForm,
+      Member customer) {
 
     DayClass dayClass = dayClassRepository.findById(addDayClassBookmarkForm.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
@@ -47,10 +41,7 @@ public class DayClassBookmarkService {
   }
 
   public void deleteDayClassBookmark(DeleteDayClassBookmarkForm dayClassBookmarkForm,
-      String email) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+      Member customer) {
 
     DayClassBookmark dayClassBookmark =
         dayClassBookmarkRepository.findById(dayClassBookmarkForm.getDayClassBookmarkId())
@@ -64,13 +55,10 @@ public class DayClassBookmarkService {
 
   }
 
-  public List<DayClassBookmarkDto> getDayClassBookmark(String email, Pageable pageable) {
-
-    Member customer = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+  public Page<DayClassBookmarkDto> getDayClassBookmark(Member customer, Pageable pageable) {
 
     return dayClassBookmarkRepository.findAllByCustomerId(customer.getId(), pageable)
-        .stream().map(DayClassBookmark::toDayClassBookmarkDto).collect(Collectors.toList());
+        .map(DayClassBookmark::toDayClassBookmarkDto);
   }
 
 }

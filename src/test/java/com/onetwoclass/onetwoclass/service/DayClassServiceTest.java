@@ -17,11 +17,11 @@ import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
@@ -66,7 +66,7 @@ class DayClassServiceTest {
             .build();
 
     //when
-    dayClassService.addDayClass(addDayClassForm, seller.getEmail());
+    dayClassService.addDayClass(addDayClassForm, seller);
 
     DayClass dayClass = dayClassRepository.findAllByStoreId(store.getId()).get(0);
 
@@ -104,10 +104,10 @@ class DayClassServiceTest {
             .build();
 
     //when
-    dayClassService.addDayClass(addDayClassForm, seller.getEmail());
+    dayClassService.addDayClass(addDayClassForm, seller);
 
     CustomException customException = assertThrows(CustomException.class,
-        () -> dayClassService.addDayClass(addDayClassForm, seller.getEmail()));
+        () -> dayClassService.addDayClass(addDayClassForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.DUPLICATION_DAYCLASS_NAME);
@@ -148,7 +148,7 @@ class DayClassServiceTest {
         .build();
 
     //when
-    dayClassService.updateDayClass(updateDayClassForm, seller.getEmail());
+    dayClassService.updateDayClass(updateDayClassForm, seller);
 
     DayClass dayClass = dayClassRepository.findAllByStoreId(store.getId()).get(0);
 
@@ -194,7 +194,7 @@ class DayClassServiceTest {
 
     //when
     CustomException customException = assertThrows(CustomException.class,
-        () -> dayClassService.updateDayClass(updateDayClassForm, seller.getEmail()));
+        () -> dayClassService.updateDayClass(updateDayClassForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.DUPLICATION_DAYCLASS_NAME);
@@ -236,7 +236,7 @@ class DayClassServiceTest {
 
     //when
     CustomException customException = assertThrows(CustomException.class,
-        () -> dayClassService.updateDayClass(updateDayClassForm, seller.getEmail()));
+        () -> dayClassService.updateDayClass(updateDayClassForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.NOT_FOUND_DAYCLASS);
@@ -277,11 +277,11 @@ class DayClassServiceTest {
         .build());
 
     //when
-    List<DayClassDto> dayClassDtoList =
-        dayClassService.getDayClassByEmail(seller.getEmail(), Pageable.unpaged());
+    Page<DayClassDto> dayClassDtoList =
+        dayClassService.getDayClassBySeller(seller, Pageable.unpaged());
 
     //then
-    assertEquals(dayClassDtoList.size(), 2);
+    assertEquals(dayClassDtoList.getTotalElements(), 2);
   }
 
   @Test
@@ -314,7 +314,7 @@ class DayClassServiceTest {
         .dayClassName("마카롱 클래스").build();
 
     //when
-    dayClassService.deleteDayClass(deleteDayClassForm, seller.getEmail());
+    dayClassService.deleteDayClass(deleteDayClassForm, seller);
 
     CustomException customException =
         assertThrows(CustomException.class,
@@ -342,11 +342,11 @@ class DayClassServiceTest {
         .build());
 
     //when
-    List<DayClassDto> dayClassDtoList =
+    Page<DayClassDto> dayClassDtoList =
         dayClassService.getAllDayClass(Pageable.ofSize(2));
 
     //then
-    assertEquals(dayClassDtoList.size(), 2);
+    assertEquals(dayClassDtoList.getContent().size(), 2);
 
   }
 
@@ -367,14 +367,14 @@ class DayClassServiceTest {
         .build());
 
     //when
-    List<DayClassDto> dayClassDtoList =
+    Page<DayClassDto> dayClassDtoList =
         dayClassService.getAllDayClassByDayClassName(
             "getAllDayClassByDayClassName", Pageable.ofSize(5));
 
     //then
-    assertEquals(dayClassDtoList.size(), 2);
-    assertEquals(dayClassDtoList.get(0).getExplains(), "success_getAllDayClassByDayClassName");
-    assertEquals(dayClassDtoList.get(1).getExplains(), "success_getAllDayClassByDayClassName");
+    assertEquals(dayClassDtoList.getTotalElements(), 2);
+    assertEquals(dayClassDtoList.getContent().get(0).getExplains(), "success_getAllDayClassByDayClassName");
+    assertEquals(dayClassDtoList.getContent().get(1).getExplains(), "success_getAllDayClassByDayClassName");
 
   }
 
@@ -403,14 +403,14 @@ class DayClassServiceTest {
         .build());
 
     //when
-    List<DayClassDto> dayClassDtoList =
+    Page<DayClassDto> dayClassDtoList =
         dayClassService.getAllDayClassByStoreId(
             store.getId(), Pageable.ofSize(5));
 
     //then
-    assertEquals(dayClassDtoList.size(), 2);
-    assertEquals(dayClassDtoList.get(0).getExplains(), "success_getAllDayClassByStoreId");
-    assertEquals(dayClassDtoList.get(1).getExplains(), "success_getAllDayClassByStoreId");
+    assertEquals(dayClassDtoList.getTotalElements(), 2);
+    assertEquals(dayClassDtoList.getContent().get(0).getExplains(), "success_getAllDayClassByStoreId");
+    assertEquals(dayClassDtoList.getContent().get(1).getExplains(), "success_getAllDayClassByStoreId");
 
   }
 

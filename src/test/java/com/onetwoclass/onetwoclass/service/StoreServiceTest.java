@@ -10,7 +10,6 @@ import com.onetwoclass.onetwoclass.domain.dto.StoreDto;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Store;
 import com.onetwoclass.onetwoclass.domain.form.store.AddStoreForm;
-import com.onetwoclass.onetwoclass.domain.form.sign.SignUpForm;
 import com.onetwoclass.onetwoclass.domain.form.store.UpdateStoreForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
@@ -30,9 +29,6 @@ class StoreServiceTest {
   private StoreService storeService;
 
   @Autowired
-  private MemberService memberService;
-
-  @Autowired
   private StoreRepository storeRepository;
 
   @Autowired
@@ -42,13 +38,13 @@ class StoreServiceTest {
   @DisplayName("상점 추가 성공")
   void Success_AddStore() {
     //given
-    SignUpForm signUpForm = SignUpForm.builder()
+    Member seller = memberRepository.save(Member.builder()
         .email("Success_AddStore@test.com")
         .name("홍길동")
         .password("12345678")
         .phone("010-1234-1234")
         .role(Role.SELLER)
-        .build();
+        .build());
 
     AddStoreForm addStoreForm = AddStoreForm.builder()
         .storename("강식당")
@@ -56,13 +52,8 @@ class StoreServiceTest {
         .category(Category.DESSERT)
         .build();
 
-    memberService.signUp(signUpForm);
-
-    Member seller = memberRepository.findByEmail(signUpForm.getEmail())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
     //when
-    storeService.addStore(addStoreForm, seller.getEmail());
+    storeService.addStore(addStoreForm, seller);
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
@@ -78,13 +69,13 @@ class StoreServiceTest {
   @DisplayName("상점 추가 실패 - 이미 등록된 상점 존재")
   void Fail_AddStore_AlreadyExistStore() {
     //given
-    SignUpForm signUpForm = SignUpForm.builder()
+    Member seller = memberRepository.save(Member.builder()
         .email("Fail_AddStore_AlreadyExistStore@test.com")
         .name("홍길동")
         .password("12345678")
         .phone("010-1234-1234")
         .role(Role.SELLER)
-        .build();
+        .build());
 
     AddStoreForm addStoreForm = AddStoreForm.builder()
         .storename("강식당")
@@ -98,19 +89,14 @@ class StoreServiceTest {
         .category(Category.DESSERT)
         .build();
 
-    memberService.signUp(signUpForm);
-
-    Member seller = memberRepository.findByEmail(signUpForm.getEmail())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
     //when
-    storeService.addStore(addStoreForm, seller.getEmail());
+    storeService.addStore(addStoreForm, seller);
 
-    storeService.getStoreByEmail(seller.getEmail());
+    storeService.getStoreBySeller(seller);
 
     CustomException customException =
         assertThrows(CustomException.class,
-            () -> storeService.addStore(afterAddStoreForm, seller.getEmail()));
+            () -> storeService.addStore(afterAddStoreForm, seller));
 
     //then
     assertEquals(customException.getErrorCode(), ErrorCode.ALREADY_EXIST_STORE);
@@ -121,19 +107,20 @@ class StoreServiceTest {
   @DisplayName("가게 정보 수정 성공")
   void Success_UpdateStore() {
     //given
-    SignUpForm signUpForm = SignUpForm.builder()
+    Member seller = memberRepository.save(Member.builder()
         .email("Success_UpdateStore@test.com")
         .name("홍길동")
         .password("12345678")
         .phone("010-1234-1234")
         .role(Role.SELLER)
-        .build();
+        .build());
 
-    AddStoreForm addStoreForm = AddStoreForm.builder()
-        .storename("강식당")
+    storeRepository.save(Store.builder()
+        .storeName("강식당")
         .explains("재밌게 만들고 맛있는 음식 !")
         .category(Category.DESSERT)
-        .build();
+        .seller(seller)
+        .build());
 
     UpdateStoreForm updateStoreForm =
         UpdateStoreForm.builder()
@@ -142,22 +129,16 @@ class StoreServiceTest {
             .category(Category.HANDICRAFT)
             .build();
 
-    memberService.signUp(signUpForm);
-    storeService.addStore(addStoreForm, signUpForm.getEmail());
-
-    Member seller = memberRepository.findByEmail(signUpForm.getEmail())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
     //when
-    storeService.updateStore(updateStoreForm, signUpForm.getEmail());
+    storeService.updateStore(updateStoreForm, seller);
 
-    Store store = storeRepository.findBySellerId(seller.getId())
+    Store updatedStore = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     //then
-    assertEquals(updateStoreForm.getStorename(), store.getStoreName());
-    assertEquals(updateStoreForm.getExplains(), store.getExplains());
-    assertEquals(updateStoreForm.getCategory(), store.getCategory());
+    assertEquals(updateStoreForm.getStorename(), updatedStore.getStoreName());
+    assertEquals(updateStoreForm.getExplains(), updatedStore.getExplains());
+    assertEquals(updateStoreForm.getCategory(), updatedStore.getCategory());
 
   }
 
@@ -165,30 +146,28 @@ class StoreServiceTest {
   @DisplayName("가게 정보 가져오기 성공")
   void Success_GetStore() {
     //given
-    SignUpForm signUpForm = SignUpForm.builder()
+    Member seller = memberRepository.save(Member.builder()
         .email("Success_GetStore@test.com")
         .name("홍길동")
         .password("12345678")
         .phone("010-1234-1234")
         .role(Role.SELLER)
-        .build();
+        .build());
 
-    AddStoreForm addStoreForm = AddStoreForm.builder()
-        .storename("강식당")
+    Store store = storeRepository.save(Store.builder()
+        .storeName("강식당")
         .explains("재밌게 만들고 맛있는 음식 !")
         .category(Category.DESSERT)
-        .build();
-
-    memberService.signUp(signUpForm);
-    storeService.addStore(addStoreForm, signUpForm.getEmail());
+        .seller(seller)
+        .build());
 
     //when
-    StoreDto storeDto = storeService.getStoreByEmail(signUpForm.getEmail());
+    StoreDto storeDto = storeService.getStoreBySeller(seller);
 
     //then
-    assertEquals(addStoreForm.getStorename(), storeDto.getStoreName());
-    assertEquals(addStoreForm.getExplains(), storeDto.getExplains());
-    assertEquals(addStoreForm.getCategory(), storeDto.getCategory());
+    assertEquals(store.getStoreName(), storeDto.getStoreName());
+    assertEquals(store.getExplains(), storeDto.getExplains());
+    assertEquals(store.getCategory(), storeDto.getCategory());
 
   }
 
@@ -196,31 +175,23 @@ class StoreServiceTest {
   @DisplayName("가게 삭제하기 성공")
   void Success_DeleteStore() {
     //given
-    SignUpForm signUpForm = SignUpForm.builder()
+    Member seller = memberRepository.save(Member.builder()
         .email("Success_DeleteStore@test.com")
         .name("홍길동")
         .password("12345678")
         .phone("010-1234-1234")
         .role(Role.SELLER)
-        .build();
+        .build());
 
-    AddStoreForm addStoreForm = AddStoreForm.builder()
-        .storename("강식당")
+    Store store = storeRepository.save(Store.builder()
+        .storeName("강식당")
         .explains("재밌게 만들고 맛있는 음식 !")
         .category(Category.DESSERT)
-        .build();
-
-    memberService.signUp(signUpForm);
-    storeService.addStore(addStoreForm, signUpForm.getEmail());
-
-    Member seller = memberRepository.findByEmail(signUpForm.getEmail())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
-    Store store = storeRepository.findBySellerId(seller.getId())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
+        .seller(seller)
+        .build());
 
     //when
-    storeService.deleteStore(signUpForm.getEmail());
+    storeService.deleteStore(seller);
 
     CustomException customException =
         assertThrows(CustomException.class,
@@ -250,7 +221,7 @@ class StoreServiceTest {
         .build());
 
     //when
-    List<StoreDto> storeDtoList = storeService.getAllStore(Pageable.ofSize(2));
+    List<StoreDto> storeDtoList = storeService.getAllStore(Pageable.ofSize(2)).getContent();
 
     //then
     assertEquals(storeDtoList.size(), 2);
@@ -274,13 +245,13 @@ class StoreServiceTest {
         .build());
 
     //when
-    List<StoreDto> storeDtoList = storeService.getAllStoreByName(Pageable.unpaged(), "2");
+    List<StoreDto> storeDtoList =
+        storeService.getAllStoreByName(Pageable.unpaged(), "2").getContent();
 
     //then
     assertEquals(storeDtoList.size(), 1);
 
   }
-
 
 
 }

@@ -1,13 +1,13 @@
 package com.onetwoclass.onetwoclass.controller.customer;
 
-import com.onetwoclass.onetwoclass.config.JwtTokenProvider;
+import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.review.AddReviewForm;
 import com.onetwoclass.onetwoclass.service.ReviewService;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,23 +22,20 @@ public class ReviewController {
 
   private final ReviewService reviewService;
 
-  private final JwtTokenProvider jwtTokenProvider;
-
   @PostMapping
   ResponseEntity<?> addReview(@RequestBody @Valid AddReviewForm addReviewForm,
-      HttpServletRequest request) {
+      @AuthenticationPrincipal Member customer) {
 
-    reviewService.addReview(addReviewForm,
-        jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)));
+    reviewService.addReview(addReviewForm, customer);
 
     return ResponseEntity.ok("리뷰 작성이 완료되었습니다.");
   }
 
   @GetMapping
-  ResponseEntity<?> getReviewByCustomerEmail(HttpServletRequest request, Pageable pageable) {
+  ResponseEntity<?> getReviewByCustomerEmail(@AuthenticationPrincipal Member customer,
+      Pageable pageable) {
 
-    return ResponseEntity.ok(reviewService.getReviewByCustomerEmail(
-        jwtTokenProvider.getMemberEmail(JwtTokenProvider.resolveToken(request)), pageable));
+    return ResponseEntity.ok(reviewService.getReviewByCustomer(customer, pageable));
   }
 
   @GetMapping("/{dayClassId}")

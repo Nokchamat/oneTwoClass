@@ -23,9 +23,9 @@ public class SellerChattingController {
 
   @PostMapping
   ResponseEntity<?> postChatting(@RequestBody PostChattingForm postChattingForm,
-      @AuthenticationPrincipal Member member) {
+      @AuthenticationPrincipal Member seller) {
 
-    chattingService.postChatting(member, postChattingForm);
+    chattingService.postChatting(seller, postChattingForm);
 
     return ResponseEntity.ok("메시지를 보냈습니다.");
   }
