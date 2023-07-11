@@ -33,9 +33,7 @@ public class MemberService {
     memberRepository.save(Member.builder()
         .email(signUpForm.getEmail())
         .name(signUpForm.getName())
-        .password(
-            passwordEncoder.encode(signUpForm.getPassword())
-        )
+        .password(passwordEncoder.encode(signUpForm.getPassword()))
         .phone(signUpForm.getPhone())
         .role(signUpForm.getRole())
         .build()
