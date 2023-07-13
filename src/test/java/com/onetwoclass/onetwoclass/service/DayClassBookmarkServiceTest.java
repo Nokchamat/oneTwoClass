@@ -3,6 +3,7 @@ package com.onetwoclass.onetwoclass.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.onetwoclass.onetwoclass.config.redis.RedisConfig;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.dto.DayClassBookmarkDto;

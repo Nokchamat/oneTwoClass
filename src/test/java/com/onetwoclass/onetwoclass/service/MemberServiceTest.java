@@ -133,12 +133,13 @@ class MemberServiceTest {
         .phone("010-1234-1234")
         .role(Role.CUSTOMER)
         .build();
-    memberService.signUp(signUpForm);
 
     SignInForm signInForm = SignInForm.builder()
         .email(signUpForm.getEmail())
         .password("12345678910")
         .build();
+
+    memberService.signUp(signUpForm);
 
     //when
     CustomException customException = assertThrows(

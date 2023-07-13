@@ -25,6 +25,8 @@ public class DayClassService {
 
   private final DayClassRepository dayClassRepository;
 
+  private final ReviewService reviewService;
+
   @Transactional
   public void addDayClass(AddDayClassForm addDayClassForm, Member seller) {
 
@@ -73,7 +75,12 @@ public class DayClassService {
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
     return dayClassRepository.findAllByStoreId(store.getId(), pageable)
-        .map(DayClass::toDayClassDto);
+        .map(dayClass -> {
+          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
+          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+
+          return dayClassDto;
+        });
   }
 
   public void deleteDayClass(DeleteDayClassForm deleteDayClassForm, Member seller) {
@@ -90,17 +97,34 @@ public class DayClassService {
   }
 
   public Page<DayClassDto> getAllDayClass(Pageable pageable) {
-    return dayClassRepository.findAll(pageable).map(DayClass::toDayClassDto);
+    return dayClassRepository.findAll(pageable).map(dayClass -> {
+      DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
+      dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+
+      return dayClassDto;
+    });
   }
 
   public Page<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
+
     return dayClassRepository.findAllByDayClassNameContaining(dayClassName, pageable)
-        .map(DayClass::toDayClassDto);
+        .map(dayClass -> {
+          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
+          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+
+          return dayClassDto;
+        });
   }
 
   public Page<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
     return dayClassRepository.findAllByStoreId(storeId, pageable)
-        .map(DayClass::toDayClassDto);
+        .map(dayClass -> {
+          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
+          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+
+          return dayClassDto;
+        });
   }
+
 
 }

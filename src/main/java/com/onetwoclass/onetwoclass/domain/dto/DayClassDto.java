@@ -18,6 +18,8 @@ public class DayClassDto {
 
   private Integer price;
 
+  private Double star;
+
   private LocalDateTime registeredAt;
 
   private LocalDateTime modifiedAt;

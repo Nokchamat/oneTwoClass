@@ -15,7 +15,9 @@ import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
 import com.onetwoclass.onetwoclass.repository.ReviewRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -77,6 +79,18 @@ public class ReviewService {
 
     return reviewRepository.findAllByDayClassId(dayClassId, pageable)
         .map(Review::toReviewDto);
+  }
+
+  @Cacheable(key = "#dayClassId", value = "getDayClassStarScore")
+  public Double getDayClassStarScore(Long dayClassId) {
+
+    List<Review> reviewList = reviewRepository.findAllByDayClassId(dayClassId);
+
+    if (reviewList.isEmpty()){
+      return 0.0;
+    }
+
+    return reviewList.stream().mapToLong(Review::getStar).average().getAsDouble();
   }
 
 }
