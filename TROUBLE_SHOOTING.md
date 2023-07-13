@@ -46,7 +46,7 @@ Spring의 @Cacheable 동작은 AOP를 이용하기 때문에 내부 매서드를
 
 수정 전
 
-    @Cacheable(value = "member", key = "#email", unless = "#result == null")
+    @Cacheable(value = "member", key = "#email")
 
 수정 후
 
