@@ -1,5 +1,7 @@
 package com.onetwoclass.onetwoclass.service;
 
+import com.onetwoclass.onetwoclass.config.elasticsearch.DayClassDocument;
+import com.onetwoclass.onetwoclass.config.elasticsearch.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.domain.dto.DayClassDto;
 import com.onetwoclass.onetwoclass.domain.entity.DayClass;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
@@ -27,6 +29,8 @@ public class DayClassService {
 
   private final ReviewService reviewService;
 
+  private final DayClassSearchRepository dayClassSearchRepository;
+
   @Transactional
   public void addDayClass(AddDayClassForm addDayClassForm, Member seller) {
 
@@ -39,11 +43,21 @@ public class DayClassService {
           throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
         });
 
-    dayClassRepository.save(DayClass.builder()
+    DayClass dayClass = dayClassRepository.save(DayClass.builder()
         .dayClassName(addDayClassForm.getDayClassName())
         .explains(addDayClassForm.getExplains())
         .price(addDayClassForm.getPrice())
         .store(store)
+        .build());
+
+    dayClassSearchRepository.save(DayClassDocument.builder()
+        .id(dayClass.getId())
+        .dayClassName(addDayClassForm.getDayClassName())
+        .explains(addDayClassForm.getExplains())
+        .price(addDayClassForm.getPrice())
+        .storeId(store.getId())
+        .modifiedAt(dayClass.getModifiedAt())
+        .registeredAt(dayClass.getRegisteredAt())
         .build());
 
   }
@@ -105,17 +119,6 @@ public class DayClassService {
     });
   }
 
-  public Page<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
-
-    return dayClassRepository.findAllByDayClassNameContaining(dayClassName, pageable)
-        .map(dayClass -> {
-          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
-          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
-
-          return dayClassDto;
-        });
-  }
-
   public Page<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
     return dayClassRepository.findAllByStoreId(storeId, pageable)
         .map(dayClass -> {
@@ -126,5 +129,21 @@ public class DayClassService {
         });
   }
 
+  public Page<DayClassDocument> getAllDayClassByDayClassNameFromElasticsearch(String dayClassname,
+      Pageable pageable) {
+
+    return dayClassSearchRepository.findAllByDayClassName(dayClassname, pageable);
+  }
+
+  public Page<DayClassDto> getAllDayClassEsAll(Pageable pageable) {
+
+    return dayClassSearchRepository.findAll(pageable).map(DayClassDocument::toDayClassDto);
+  }
+
+  public DayClassDto getDayClassDocumentById(Long dayClassId) {
+
+    return DayClassDocument.toDayClassDto(dayClassSearchRepository.findById(dayClassId)
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS)));
+  }
 
 }

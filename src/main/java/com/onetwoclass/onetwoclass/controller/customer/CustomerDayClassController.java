@@ -22,17 +22,31 @@ public class CustomerDayClassController {
     return ResponseEntity.ok(dayClassService.getAllDayClass(pageable));
   }
 
-  @GetMapping("/{dayClassname}")
-  ResponseEntity<?> getAllDayClassByDayClassName(@PathVariable String dayClassname,
-      Pageable pageable) {
-
-    return ResponseEntity.ok(dayClassService.getAllDayClassByDayClassName(dayClassname, pageable));
-  }
-
   @GetMapping("/store/{storeId}")
   ResponseEntity<?> getAllDayClassByStoreId(@PathVariable Long storeId, Pageable pageable) {
 
     return ResponseEntity.ok(dayClassService.getAllDayClassByStoreId(storeId, pageable));
+  }
+
+  @GetMapping("/search/name/{dayClassname}")
+  ResponseEntity<?> getAllDayClassByDayClassNameES(@PathVariable String dayClassname,
+      Pageable pageable) {
+
+    System.out.println("GetAllByNam : " + dayClassname);
+
+    return ResponseEntity.ok(dayClassService.getAllDayClassByDayClassNameFromElasticsearch(dayClassname, pageable));
+  }
+
+  @GetMapping("/search/all")
+  ResponseEntity<?> getAllDayClassByDayClassEsAll(Pageable pageable) {
+
+    return ResponseEntity.ok(dayClassService.getAllDayClassEsAll(pageable));
+  }
+
+  @GetMapping("/search/detail/{dayClassId}")
+  ResponseEntity<?> getAllDayClassByIdES(@PathVariable Long dayClassId) {
+
+    return ResponseEntity.ok(dayClassService.getDayClassDocumentById(dayClassId));
   }
 
 
