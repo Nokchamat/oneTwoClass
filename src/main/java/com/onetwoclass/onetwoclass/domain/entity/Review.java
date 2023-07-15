@@ -38,9 +38,8 @@ public class Review {
   @CreatedDate
   private LocalDateTime registeredAt;
 
-  @ManyToOne
   @JoinColumn(name = "day_class_id")
-  private DayClass dayClass;
+  private String dayClassId;
 
   @ManyToOne
   @JoinColumn(name = "customer_id")
@@ -56,8 +55,7 @@ public class Review {
         .text(review.getText())
         .star(review.getStar())
         .registeredAt(review.getRegisteredAt())
-        .dayClassId(review.getDayClass().getId())
-        .dayClassName(review.getDayClass().getDayClassName())
+        .dayClassId(review.getDayClassId())
         .scheduleId(review.getSchedule().getId())
         .build();
   }

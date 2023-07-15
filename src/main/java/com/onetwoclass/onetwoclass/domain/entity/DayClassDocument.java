@@ -1,4 +1,4 @@
-package com.onetwoclass.onetwoclass.config.elasticsearch;
+package com.onetwoclass.onetwoclass.domain.entity;
 
 import static org.springframework.data.elasticsearch.annotations.DateFormat.date_hour_minute_second_millis;
 import static org.springframework.data.elasticsearch.annotations.DateFormat.epoch_millis;
@@ -32,10 +32,13 @@ public class DayClassDocument {
   @Id
   @Field(type = FieldType.Keyword)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
 
   @Field(type = FieldType.Text)
-  private String dayClassName;
+  private String dayClassNameText;
+
+  @Field(type = FieldType.Keyword)
+  private String dayClassNameKeyword;
 
   @Lob
   @Field(type = FieldType.Text)
@@ -56,7 +59,8 @@ public class DayClassDocument {
   public void updateDayClass(UpdateDayClassForm updateDayClassForm) {
 
     if (updateDayClassForm.getToChangeDayClassName() != null) {
-      this.dayClassName = updateDayClassForm.getToChangeDayClassName();
+      this.dayClassNameText = updateDayClassForm.getToChangeDayClassName();
+      this.dayClassNameKeyword = updateDayClassForm.getToChangeDayClassName();
     }
 
     if (updateDayClassForm.getToChangePrice() != null) {
@@ -67,12 +71,14 @@ public class DayClassDocument {
       this.explains = updateDayClassForm.getToChangeExplains();
     }
 
+    this.modifiedAt = LocalDateTime.now();
+
   }
 
   public static DayClassDto toDayClassDto(DayClassDocument dayClassDocument) {
     return DayClassDto.builder()
         .dayClassId(dayClassDocument.getId())
-        .dayClassName(dayClassDocument.getDayClassName())
+        .dayClassName(dayClassDocument.getDayClassNameText())
         .explains(dayClassDocument.getExplains())
         .price(dayClassDocument.getPrice())
         .registeredAt(dayClassDocument.getRegisteredAt())

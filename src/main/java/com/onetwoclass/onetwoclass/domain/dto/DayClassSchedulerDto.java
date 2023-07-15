@@ -10,8 +10,6 @@ public class DayClassSchedulerDto {
 
   private Long dayClassSchedulerId;
 
-  private String dayClassName;
-
   private LocalDateTime scheduledDate;
 
 }

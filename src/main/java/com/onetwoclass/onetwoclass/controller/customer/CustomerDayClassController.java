@@ -17,9 +17,9 @@ public class CustomerDayClassController {
   private final DayClassService dayClassService;
 
   @GetMapping
-  ResponseEntity<?> getAllDayClass(Pageable pageable) {
+  ResponseEntity<?> getAllDayClassByDayClass(Pageable pageable) {
 
-    return ResponseEntity.ok(dayClassService.getAllDayClass(pageable));
+    return ResponseEntity.ok(dayClassService.getAllDayClassFromElasticsearch(pageable));
   }
 
   @GetMapping("/store/{storeId}")
@@ -28,25 +28,18 @@ public class CustomerDayClassController {
     return ResponseEntity.ok(dayClassService.getAllDayClassByStoreId(storeId, pageable));
   }
 
-  @GetMapping("/search/name/{dayClassname}")
-  ResponseEntity<?> getAllDayClassByDayClassNameES(@PathVariable String dayClassname,
+  @GetMapping("/name/{dayClassname}")
+  ResponseEntity<?> getAllDayClassByDayClassName(@PathVariable String dayClassname,
       Pageable pageable) {
 
-    System.out.println("GetAllByNam : " + dayClassname);
-
-    return ResponseEntity.ok(dayClassService.getAllDayClassByDayClassNameFromElasticsearch(dayClassname, pageable));
+    return ResponseEntity.ok(
+        dayClassService.getAllDayClassByDayClassNameFromElasticsearch(dayClassname, pageable));
   }
 
-  @GetMapping("/search/all")
-  ResponseEntity<?> getAllDayClassByDayClassEsAll(Pageable pageable) {
+  @GetMapping("/id/{dayClassId}")
+  ResponseEntity<?> getAllDayClassById(@PathVariable String dayClassId) {
 
-    return ResponseEntity.ok(dayClassService.getAllDayClassEsAll(pageable));
-  }
-
-  @GetMapping("/search/detail/{dayClassId}")
-  ResponseEntity<?> getAllDayClassByIdES(@PathVariable Long dayClassId) {
-
-    return ResponseEntity.ok(dayClassService.getDayClassDocumentById(dayClassId));
+    return ResponseEntity.ok(dayClassService.getDayClassDocumentFromElasticsearch(dayClassId));
   }
 
 

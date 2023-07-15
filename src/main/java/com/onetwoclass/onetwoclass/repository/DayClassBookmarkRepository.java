@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DayClassBookmarkRepository extends JpaRepository<DayClassBookmark, Long> {
 
-  Optional<DayClassBookmark> findByCustomerIdAndDayClassId(Long customerId, Long dayClassId);
+  Optional<DayClassBookmark> findByCustomerIdAndDayClassId(Long customerId, String dayClassId);
 
   Page<DayClassBookmark> findAllByCustomerId(Long id, Pageable pageable);
 }

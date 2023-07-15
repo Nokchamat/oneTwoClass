@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AddDayClassSchedulerForm {
 
   @NotNull(message = "데이클래스의 id를 기재해주세요.")
-  private Long dayClassId;
+  private String dayClassId;
 
   @NotNull(message = "등록하시고자 하는 날짜를 기재해주세요.")
   private LocalDateTime scheduledDate;

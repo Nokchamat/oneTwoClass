@@ -39,7 +39,7 @@ public class ReviewController {
   }
 
   @GetMapping("/{dayClassId}")
-  ResponseEntity<?> getReviewByDayClassId(@PathVariable Long dayClassId, Pageable pageable) {
+  ResponseEntity<?> getReviewByDayClassId(@PathVariable String dayClassId, Pageable pageable) {
 
     return ResponseEntity.ok(reviewService.getReviewByDayClassId(dayClassId, pageable));
   }

@@ -27,15 +27,12 @@ public class DayClassBookmark {
   @JoinColumn(name = "customer_id")
   private Member customer;
 
-  @ManyToOne
-  @JoinColumn(name = "day_class_id")
-  private DayClass dayClass;
+  private String dayClassId;
 
   public static DayClassBookmarkDto toDayClassBookmarkDto(DayClassBookmark dayClassBookmark) {
     return DayClassBookmarkDto.builder()
         .id(dayClassBookmark.getId())
-        .dayClassName(dayClassBookmark.getDayClass().getDayClassName())
-        .dayClassId(dayClassBookmark.getDayClass().getId())
+        .dayClassId(dayClassBookmark.dayClassId)
         .build();
   }
 

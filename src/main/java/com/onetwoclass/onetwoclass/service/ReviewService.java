@@ -2,7 +2,7 @@ package com.onetwoclass.onetwoclass.service;
 
 
 import com.onetwoclass.onetwoclass.domain.dto.ReviewDto;
-import com.onetwoclass.onetwoclass.domain.entity.DayClass;
+import com.onetwoclass.onetwoclass.domain.entity.DayClassDocument;
 import com.onetwoclass.onetwoclass.domain.entity.DayClassScheduler;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Review;
@@ -10,8 +10,8 @@ import com.onetwoclass.onetwoclass.domain.entity.Schedule;
 import com.onetwoclass.onetwoclass.domain.form.review.AddReviewForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
+import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.ReviewRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class ReviewService {
 
   private final ReviewRepository reviewRepository;
 
-  private final DayClassRepository dayClassRepository;
+  private final DayClassSearchRepository dayClassSearchRepository;
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
@@ -43,7 +43,7 @@ public class ReviewService {
         dayClassSchedulerRepository.findById(schedule.getDayClassScheduler().getId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS_SCHEDULER));
 
-    DayClass dayClass = dayClassRepository.findById(dayClassScheduler.getDayClass().getId())
+    DayClassDocument dayClassDocument = dayClassSearchRepository.findById(dayClassScheduler.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
     if (!schedule.getAcceptYn() || !dayClassScheduler.getScheduledDate().isBefore(LocalDateTime.now())) {
@@ -62,7 +62,7 @@ public class ReviewService {
     reviewRepository.save(Review.builder()
         .text(addReviewForm.getText())
         .star(addReviewForm.getStar())
-        .dayClass(dayClass)
+        .dayClassId(dayClassDocument.getId())
         .customer(customer)
         .schedule(schedule)
         .build());
@@ -75,14 +75,14 @@ public class ReviewService {
         .map(Review::toReviewDto);
   }
 
-  public  Page<ReviewDto> getReviewByDayClassId(Long dayClassId, Pageable pageable) {
+  public  Page<ReviewDto> getReviewByDayClassId(String dayClassId, Pageable pageable) {
 
     return reviewRepository.findAllByDayClassId(dayClassId, pageable)
         .map(Review::toReviewDto);
   }
 
   @Cacheable(key = "#dayClassId", value = "getDayClassStarScore")
-  public Double getDayClassStarScore(Long dayClassId) {
+  public Double getDayClassStarScore(String dayClassId) {
 
     List<Review> reviewList = reviewRepository.findAllByDayClassId(dayClassId);
 

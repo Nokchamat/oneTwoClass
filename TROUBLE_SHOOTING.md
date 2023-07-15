@@ -51,3 +51,16 @@ Spring의 @Cacheable 동작은 AOP를 이용하기 때문에 내부 매서드를
 수정 후
 
     @Cacheable(value = "member", key = "#email", unless = "#result == null")
+
+## 엘라스틱서치로 인하여 데이클래스 생성 시와 수정 시에 검색 타입이 text로 검색 되어 중복 오류 발생
+DayClass 생성 시와 수정 시에 데이클래스 이름 중복을 필터링하기 위해서 storeId와 dayClassName로
+조회하는 로직이 있습니다. 해당 로직에서 dayClassName을 검색 시에 text type으로 검색되기 때문에
+중복된 이름이 아닌데도 중복으로 예외가 발생했습니다.
+해당 오류는 dayClassName을 2개 만들어서 Type을 text, keyword로 관리하도록 수정했습니다.
+중복 검색 시에는 keyword를 사용하며 사용자가 검색 시에는 type을 사용하여 엘라스틱 서치를 지원합니다.
+
+    @Field(type = FieldType.Text)
+    private String dayClassNameText;
+    
+    @Field(type = FieldType.Keyword)
+    private String dayClassNameKeyword;

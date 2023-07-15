@@ -33,7 +33,7 @@ public class SellerDayClassSchedulerController {
   }
 
   @GetMapping("/{dayClassId}")
-  ResponseEntity<?> getDayClassScheduler(@PathVariable Long dayClassId,
+  ResponseEntity<?> getDayClassScheduler(@PathVariable String dayClassId,
       @AuthenticationPrincipal Member seller, Pageable pageable) {
 
     return ResponseEntity.ok(dayClassSchedulerService.getDayClassSchedulerByDayClassIdAndEmail(
