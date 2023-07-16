@@ -1,6 +1,6 @@
 {
   "properties": {
-    "dayClassNameText": {
+    "dayClassName": {
       "type": "text",
       "analyzer": "my_nori_analyzer"
     }

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.dto.ScheduleDto;
-import com.onetwoclass.onetwoclass.domain.entity.DayClass;
+import com.onetwoclass.onetwoclass.domain.entity.DayClassDocument;
 import com.onetwoclass.onetwoclass.domain.entity.DayClassScheduler;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Schedule;
@@ -16,8 +16,8 @@ import com.onetwoclass.onetwoclass.domain.entity.Store;
 import com.onetwoclass.onetwoclass.domain.form.schedule.RequestScheduleForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
+import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
@@ -39,7 +39,7 @@ class ScheduleServiceTest {
   private StoreRepository storeRepository;
 
   @Autowired
-  private DayClassRepository dayClassRepository;
+  private DayClassSearchRepository dayClassSearchRepository;
 
   @Autowired
   private MemberRepository memberRepository;
@@ -77,16 +77,18 @@ class ScheduleServiceTest {
         .seller(seller)
         .build());
 
-    DayClass dayClass = dayClassRepository.save(DayClass.builder()
-        .dayClassName("마카롱 클래스")
-        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
-        .price(5000)
-        .store(store)
-        .build());
+    DayClassDocument dayClassDocument = dayClassSearchRepository.save(
+        DayClassDocument.builder()
+            .dayClassNameKeyword("빵 클래스")
+            .dayClassNameText("빵 클래스")
+            .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+            .price(5000)
+            .storeId(store.getId())
+            .build());
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
-            .dayClass(dayClass)
+            .dayClassId(dayClassDocument.getId())
             .scheduledDate(LocalDateTime.now().plusDays(3))
             .build());
 
@@ -135,16 +137,18 @@ class ScheduleServiceTest {
         .seller(seller)
         .build());
 
-    DayClass dayClass = dayClassRepository.save(DayClass.builder()
-        .dayClassName("마카롱 클래스")
-        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
-        .price(5000)
-        .store(store)
-        .build());
+    DayClassDocument dayClassDocument = dayClassSearchRepository.save(
+        DayClassDocument.builder()
+            .dayClassNameKeyword("빵 클래스")
+            .dayClassNameText("빵 클래스")
+            .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+            .price(5000)
+            .storeId(store.getId())
+            .build());
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
-            .dayClass(dayClass)
+            .dayClassId(dayClassDocument.getId())
             .scheduledDate(LocalDateTime.now().plusDays(3))
             .build());
 
@@ -190,23 +194,25 @@ class ScheduleServiceTest {
         .seller(seller)
         .build());
 
-    DayClass dayClass = dayClassRepository.save(DayClass.builder()
-        .dayClassName("마카롱 클래스")
-        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
-        .price(5000)
-        .store(store)
-        .build());
+    DayClassDocument dayClassDocument = dayClassSearchRepository.save(
+        DayClassDocument.builder()
+            .dayClassNameKeyword("빵 클래스")
+            .dayClassNameText("빵 클래스")
+            .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+            .price(5000)
+            .storeId(store.getId())
+            .build());
 
     DayClassScheduler dayClassScheduler1 =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
-            .scheduledDate(LocalDateTime.of(2023, 8, 20, 13, 0, 0))
-            .dayClass(dayClass)
+            .dayClassId(dayClassDocument.getId())
+            .scheduledDate(LocalDateTime.now().plusDays(3))
             .build());
 
     DayClassScheduler dayClassScheduler2 =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
             .scheduledDate(LocalDateTime.of(2023, 8, 21, 13, 0, 0))
-            .dayClass(dayClass)
+            .dayClassId(dayClassDocument.getId())
             .build());
 
     scheduleRepository.save(Schedule.builder()
@@ -267,17 +273,19 @@ class ScheduleServiceTest {
         .seller(seller)
         .build());
 
-    DayClass dayClass = dayClassRepository.save(DayClass.builder()
-        .dayClassName("마카롱 클래스")
-        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
-        .price(5000)
-        .store(store)
-        .build());
+    DayClassDocument dayClassDocument = dayClassSearchRepository.save(
+        DayClassDocument.builder()
+            .dayClassNameKeyword("빵 클래스")
+            .dayClassNameText("빵 클래스")
+            .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+            .price(5000)
+            .storeId(store.getId())
+            .build());
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
-            .scheduledDate(LocalDateTime.of(2023, 8, 20, 13, 0, 0))
-            .dayClass(dayClass)
+            .dayClassId(dayClassDocument.getId())
+            .scheduledDate(LocalDateTime.now().plusDays(3))
             .build());
 
     scheduleRepository.save(Schedule.builder()
@@ -330,17 +338,19 @@ class ScheduleServiceTest {
         .seller(seller)
         .build());
 
-    DayClass dayClass = dayClassRepository.save(DayClass.builder()
-        .dayClassName("마카롱 클래스")
-        .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
-        .price(5000)
-        .store(store)
-        .build());
+    DayClassDocument dayClassDocument = dayClassSearchRepository.save(
+        DayClassDocument.builder()
+            .dayClassNameKeyword("빵 클래스")
+            .dayClassNameText("빵 클래스")
+            .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
+            .price(5000)
+            .storeId(store.getId())
+            .build());
 
     DayClassScheduler dayClassScheduler =
         dayClassSchedulerRepository.save(DayClassScheduler.builder()
-            .scheduledDate(LocalDateTime.of(2023, 8, 20, 13, 0, 0))
-            .dayClass(dayClass)
+            .dayClassId(dayClassDocument.getId())
+            .scheduledDate(LocalDateTime.now().plusDays(3))
             .build());
 
     Schedule schedule1 = scheduleRepository.save(Schedule.builder()

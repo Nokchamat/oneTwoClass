@@ -16,6 +16,11 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,20 +33,24 @@ public class DayClassService {
 
   private final ReviewService reviewService;
 
+  private final ElasticsearchOperations elasticsearchOperations;
+
   @Transactional
   public void addDayClass(AddDayClassForm addDayClassForm, Member seller) {
 
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassSearchRepository
-        .findByStoreIdAndDayClassNameKeyword(store.getId(), addDayClassForm.getDayClassName())
-        .ifPresent(d -> {
-          throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
-        });
+    SearchHits<DayClassDocument> dayClassDocument = findByStoreIdAndDayClassNameKeyword(
+        store.getId(), addDayClassForm.getDayClassName());
+
+    if (!dayClassDocument.isEmpty()) {
+      throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
+    }
 
     dayClassSearchRepository.save(DayClassDocument.builder()
         .dayClassNameText(addDayClassForm.getDayClassName())
+        .dayClassNameKeyword(addDayClassForm.getDayClassName())
         .explains(addDayClassForm.getExplains())
         .price(addDayClassForm.getPrice())
         .storeId(store.getId())
@@ -58,23 +67,24 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassSearchRepository.findByStoreIdAndDayClassNameKeyword(
-            store.getId(), updateDayClassForm.getToChangeDayClassName())
-        .ifPresent(a -> {
-          throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
-        });
+    SearchHits<DayClassDocument> dayClassDocument = findByStoreIdAndDayClassNameKeyword(
+        store.getId(), updateDayClassForm.getToChangeDayClassName());
 
-    DayClassDocument dayClassDocument = dayClassSearchRepository
+    if (!dayClassDocument.isEmpty()) {
+      throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
+    }
+
+    DayClassDocument updateDayClassDocument = dayClassSearchRepository
         .findById(updateDayClassForm.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    if (dayClassDocument.getStoreId() != store.getId()) {
+    if (updateDayClassDocument.getStoreId() != store.getId()) {
       throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
     }
 
-    dayClassDocument.updateDayClass(updateDayClassForm);
+    updateDayClassDocument.updateDayClass(updateDayClassForm);
 
-    dayClassSearchRepository.save(dayClassDocument);
+    dayClassSearchRepository.save(updateDayClassDocument);
 
   }
 
@@ -149,6 +159,17 @@ public class DayClassService {
     dayClassDto.setStar(reviewService.getDayClassStarScore(dayClassDto.getDayClassId()));
 
     return dayClassDto;
+  }
+
+  public SearchHits<DayClassDocument> findByStoreIdAndDayClassNameKeyword(Long storeId, String name){
+
+    Query searchQuery = new StringQuery(
+    "{\"bool\":{\"must\":[{\"match\":{\"dayClassNameKeyword.keyword\":\""+ name +"\"}},{\"match\":{\"storeId\":\""+ storeId +"\"}}]}}");
+
+    return elasticsearchOperations.search(
+        searchQuery,
+        DayClassDocument.class,
+        IndexCoordinates.of("dayclass"));
   }
 
 }

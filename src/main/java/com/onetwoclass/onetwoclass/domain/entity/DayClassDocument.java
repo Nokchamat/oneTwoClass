@@ -41,7 +41,7 @@ public class DayClassDocument {
   private String dayClassNameKeyword;
 
   @Lob
-  @Field(type = FieldType.Text)
+  @Field(type = FieldType.Keyword)
   private String explains;
 
   @Field(type = FieldType.Keyword)

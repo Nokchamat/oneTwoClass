@@ -272,9 +272,6 @@ class NoticeServiceTest {
     Page<NoticeDto> noticeDtoList2 =
         noticeService.getNoticeByStoreId(Pageable.unpaged(), store2.getId());
 
-
-
-
     //then
     assertEquals(noticeDtoList1.getTotalElements(), 2);
     assertEquals(noticeDtoList2.getTotalElements(), 3);

@@ -2,7 +2,6 @@ package com.onetwoclass.onetwoclass.repository;
 
 import com.onetwoclass.onetwoclass.domain.entity.DayClassDocument;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -15,7 +14,5 @@ public interface DayClassSearchRepository extends ElasticsearchRepository<DayCla
 
   Page<DayClassDocument> findAllByStoreId(Long storeId, Pageable pageable);
   List<DayClassDocument> findAllByStoreId(Long storeId);
-
-  Optional<DayClassDocument> findByStoreIdAndDayClassNameKeyword(Long storeId, String dayClassName);
 
 }

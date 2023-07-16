@@ -52,6 +52,7 @@ Spring의 @Cacheable 동작은 AOP를 이용하기 때문에 내부 매서드를
 
     @Cacheable(value = "member", key = "#email", unless = "#result == null")
 
+
 ## 엘라스틱서치로 인하여 데이클래스 생성 시와 수정 시에 검색 타입이 text로 검색 되어 중복 오류 발생
 DayClass 생성 시와 수정 시에 데이클래스 이름 중복을 필터링하기 위해서 storeId와 dayClassName로
 조회하는 로직이 있습니다. 해당 로직에서 dayClassName을 검색 시에 text type으로 검색되기 때문에
@@ -64,3 +65,17 @@ DayClass 생성 시와 수정 시에 데이클래스 이름 중복을 필터링�
     
     @Field(type = FieldType.Keyword)
     private String dayClassNameKeyword;
+
+- 해당 건 수정 이후 테스트코드 작성 중 재발생, 완화는 되었으나 띄어쓰기를 기준으로 하여 중복 이슈 재발생
+- 이후 아래 쿼리문 작성하여 해결
+
+      private SearchHits<DayClassDocument> findByStoreIdAndDayClassNameKeyword(Long storeId, String name){
+          Query searchQuery = new StringQuery(
+          "{\"bool\":{\"must\":[{\"match\":{\"dayClassNameKeyword.keyword\":\""+ name +"\"}},{\"match\":{\"storeId\":\""+ storeId +"\"}}]}}");
+        
+          return elasticsearchOperations.search(
+          searchQuery,
+          DayClassDocument.class,
+          IndexCoordinates.of("dayclass"));
+      }
+

@@ -16,6 +16,9 @@ spring:
 
     database: h2
 
+  elasticsearch:
+    uris: http://localhost:32880
+
 jwt:
   secret: "secretKey"
   validate: "1000 * 60 * 60 * 24"
