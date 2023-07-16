@@ -1,3 +1,5 @@
 FROM adoptopenjdk/openjdk11
-COPY build/libs/*.jar onetwoclass.jar
-ENTRYPOINT ["java", "-jar", "onetwoclass.jar"]
+RUN mkdir -p deploy
+WORKDIR /deploy
+COPY ./build/libs/*.jar onetwoclass.jar
+ENTRYPOINT ["java", "-jar", "/deploy/onetwoclass.jar"]

@@ -1,15 +1,40 @@
 version: '3.7'
 services:
+  app:
+    build:
+      context: .Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+      - es
+    networks:
+      - es-bridge
+
   mysql:
-    container_name: onwetwoclass-mysql
+    container_name: mysql-container
+    image: mysql:latest
     environment:
-      ROOT_PASSWORD : 1234
+      - MYSQL_ROOT_PASSWORD= 1234
+      - MYSQL_DATABASE=onetwoclass
+
     ports:
       - "3306:3306"
+    networks:
+      - es-bridge
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    networks:
+      - es-bridge
 
   es:
     build:
-      context: "Dockerfile-nori"
+      context: .Dockerfile-nori
       args:
         ELK_VERSION: 7.15.2
     container_name: es
