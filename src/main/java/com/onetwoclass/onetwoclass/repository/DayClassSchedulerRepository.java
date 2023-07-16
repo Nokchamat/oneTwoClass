@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DayClassSchedulerRepository extends JpaRepository<DayClassScheduler, Long> {
 
-  Optional<DayClassScheduler> findByDayClassIdAndScheduledDate(Long dayClassId,
+  Optional<DayClassScheduler> findByDayClassIdAndScheduledDate(String dayClassId,
       LocalDateTime scheduledDate);
 
-  Page<DayClassScheduler> findAllByDayClassId(Long dayClassId, Pageable pageable);
+  Page<DayClassScheduler> findAllByDayClassId(String dayClassId, Pageable pageable);
 }

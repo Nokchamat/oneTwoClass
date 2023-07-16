@@ -13,8 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeleteDayClassForm {
 
-  @NotNull(message = "삭제하실 데이클래스의 이름을 기재해주세요.")
-  @Size(min = 1, max = 20)
-  private String dayClassName;
+  @NotNull(message = "삭제하실 데이클래스의 아이디를 기재해주세요.")
+  private String dayClassId;
 
 }

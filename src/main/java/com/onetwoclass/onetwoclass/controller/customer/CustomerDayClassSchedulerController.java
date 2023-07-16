@@ -18,7 +18,7 @@ public class CustomerDayClassSchedulerController {
 
   @GetMapping("/{dayClassId}")
   ResponseEntity<?> getDayClassSchedulerByDayClassId(
-      @PathVariable Long dayClassId, Pageable pageable) {
+      @PathVariable String dayClassId, Pageable pageable) {
     return ResponseEntity.ok(
         dayClassSchedulerService.getDayClassSchedulerByDayClassId(dayClassId, pageable));
   }

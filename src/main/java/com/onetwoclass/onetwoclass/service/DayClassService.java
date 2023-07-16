@@ -1,7 +1,7 @@
 package com.onetwoclass.onetwoclass.service;
 
 import com.onetwoclass.onetwoclass.domain.dto.DayClassDto;
-import com.onetwoclass.onetwoclass.domain.entity.DayClass;
+import com.onetwoclass.onetwoclass.domain.entity.DayClassDocument;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Store;
 import com.onetwoclass.onetwoclass.domain.form.dayclass.AddDayClassForm;
@@ -9,8 +9,9 @@ import com.onetwoclass.onetwoclass.domain.form.dayclass.DeleteDayClassForm;
 import com.onetwoclass.onetwoclass.domain.form.dayclass.UpdateDayClassForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.DayClassRepository;
+import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class DayClassService {
 
   private final StoreRepository storeRepository;
 
-  private final DayClassRepository dayClassRepository;
+  private final DayClassSearchRepository dayClassSearchRepository;
 
   private final ReviewService reviewService;
 
@@ -33,17 +34,19 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassRepository
-        .findByStoreIdAndDayClassName(store.getId(), addDayClassForm.getDayClassName())
+    dayClassSearchRepository
+        .findByStoreIdAndDayClassNameKeyword(store.getId(), addDayClassForm.getDayClassName())
         .ifPresent(d -> {
           throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
         });
 
-    dayClassRepository.save(DayClass.builder()
-        .dayClassName(addDayClassForm.getDayClassName())
+    dayClassSearchRepository.save(DayClassDocument.builder()
+        .dayClassNameText(addDayClassForm.getDayClassName())
         .explains(addDayClassForm.getExplains())
         .price(addDayClassForm.getPrice())
-        .store(store)
+        .storeId(store.getId())
+        .modifiedAt(LocalDateTime.now())
+        .registeredAt(LocalDateTime.now())
         .build());
 
   }
@@ -55,17 +58,23 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassRepository.findByStoreIdAndDayClassName(
+    dayClassSearchRepository.findByStoreIdAndDayClassNameKeyword(
             store.getId(), updateDayClassForm.getToChangeDayClassName())
         .ifPresent(a -> {
           throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
         });
 
-    DayClass dayClass = dayClassRepository
-        .findByStoreIdAndDayClassName(store.getId(), updateDayClassForm.getDayClassName())
+    DayClassDocument dayClassDocument = dayClassSearchRepository
+        .findById(updateDayClassForm.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    dayClass.updateDayClass(updateDayClassForm);
+    if (dayClassDocument.getStoreId() != store.getId()) {
+      throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
+    }
+
+    dayClassDocument.updateDayClass(updateDayClassForm);
+
+    dayClassSearchRepository.save(dayClassDocument);
 
   }
 
@@ -74,10 +83,10 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    return dayClassRepository.findAllByStoreId(store.getId(), pageable)
+    return dayClassSearchRepository.findAllByStoreId(store.getId(), pageable)
         .map(dayClass -> {
-          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
-          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+          DayClassDto dayClassDto = DayClassDocument.toDayClassDto(dayClass);
+          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClassDto.getDayClassId()));
 
           return dayClassDto;
         });
@@ -88,43 +97,58 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    DayClass dayclass =
-        dayClassRepository.findByStoreIdAndDayClassName(
-                store.getId(), deleteDayClassForm.getDayClassName())
-            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
+    DayClassDocument dayClassDocument
+        = dayClassSearchRepository.findById(deleteDayClassForm.getDayClassId())
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    dayClassRepository.delete(dayclass);
+    if (store.getId() != dayClassDocument.getStoreId()) {
+      throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
+    }
+
+    dayClassSearchRepository.delete(dayClassDocument);
   }
 
-  public Page<DayClassDto> getAllDayClass(Pageable pageable) {
-    return dayClassRepository.findAll(pageable).map(dayClass -> {
-      DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
-      dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+  public Page<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
+    return dayClassSearchRepository.findAllByStoreId(storeId, pageable)
+        .map(dayClass -> {
+          DayClassDto dayClassDto = DayClassDocument.toDayClassDto(dayClass);
+          dayClassDto.setStar(reviewService.getDayClassStarScore(String.valueOf(dayClass.getId())));
+
+          return dayClassDto;
+        });
+  }
+
+  public Page<DayClassDto> getAllDayClassByDayClassNameFromElasticsearch(String dayClassname,
+      Pageable pageable) {
+
+    return dayClassSearchRepository.findAllByDayClassNameText(dayClassname, pageable)
+        .map(dayClass -> {
+          DayClassDto dayClassDto = DayClassDocument.toDayClassDto(dayClass);
+          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClassDto.getDayClassId()));
+
+          return dayClassDto;
+        });
+  }
+
+  public Page<DayClassDto> getAllDayClassFromElasticsearch(Pageable pageable) {
+
+    return dayClassSearchRepository.findAll(pageable).map(dayClass -> {
+      DayClassDto dayClassDto = DayClassDocument.toDayClassDto(dayClass);
+      dayClassDto.setStar(reviewService.getDayClassStarScore(dayClassDto.getDayClassId()));
 
       return dayClassDto;
     });
   }
 
-  public Page<DayClassDto> getAllDayClassByDayClassName(String dayClassName, Pageable pageable) {
+  public DayClassDto getDayClassDocumentFromElasticsearch(String dayClassId) {
 
-    return dayClassRepository.findAllByDayClassNameContaining(dayClassName, pageable)
-        .map(dayClass -> {
-          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
-          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
+    DayClassDto dayClassDto = DayClassDocument.toDayClassDto(
+        dayClassSearchRepository.findById(dayClassId)
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS)));
 
-          return dayClassDto;
-        });
+    dayClassDto.setStar(reviewService.getDayClassStarScore(dayClassDto.getDayClassId()));
+
+    return dayClassDto;
   }
-
-  public Page<DayClassDto> getAllDayClassByStoreId(Long storeId, Pageable pageable) {
-    return dayClassRepository.findAllByStoreId(storeId, pageable)
-        .map(dayClass -> {
-          DayClassDto dayClassDto = DayClass.toDayClassDto(dayClass);
-          dayClassDto.setStar(reviewService.getDayClassStarScore(dayClass.getId()));
-
-          return dayClassDto;
-        });
-  }
-
 
 }

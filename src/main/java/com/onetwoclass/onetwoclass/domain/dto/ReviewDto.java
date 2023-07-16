@@ -16,9 +16,7 @@ public class ReviewDto {
 
   private LocalDateTime registeredAt;
 
-  private Long dayClassId;
-
-  private String dayClassName;
+  private String dayClassId;
 
   private Long scheduleId;
 

@@ -24,16 +24,13 @@ public class DayClassScheduler {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "day_class_id")
-  private DayClass dayClass;
+  private String dayClassId;
 
   private LocalDateTime scheduledDate;
 
   public static DayClassSchedulerDto toDayClassSchedulerDto(DayClassScheduler dayClassScheduler) {
     return DayClassSchedulerDto.builder()
         .dayClassSchedulerId(dayClassScheduler.id)
-        .dayClassName(dayClassScheduler.getDayClass().getDayClassName())
         .scheduledDate(dayClassScheduler.scheduledDate)
         .build();
   }

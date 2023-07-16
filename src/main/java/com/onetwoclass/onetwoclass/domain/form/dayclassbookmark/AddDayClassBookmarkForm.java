@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class AddDayClassBookmarkForm {
 
   @NotNull(message = "추가할 데이클래스 아이디를 기재해주세요.")
-  private Long dayClassId;
+  private String dayClassId;
 
 }

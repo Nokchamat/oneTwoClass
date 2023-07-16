@@ -1,7 +1,7 @@
 package com.onetwoclass.onetwoclass.service;
 
 import com.onetwoclass.onetwoclass.domain.dto.ScheduleDto;
-import com.onetwoclass.onetwoclass.domain.entity.DayClass;
+import com.onetwoclass.onetwoclass.domain.entity.DayClassDocument;
 import com.onetwoclass.onetwoclass.domain.entity.DayClassScheduler;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.entity.Schedule;
@@ -9,8 +9,8 @@ import com.onetwoclass.onetwoclass.domain.entity.Store;
 import com.onetwoclass.onetwoclass.domain.form.schedule.RequestScheduleForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.DayClassRepository;
 import com.onetwoclass.onetwoclass.repository.DayClassSchedulerRepository;
+import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.ScheduleRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import javax.transaction.Transactional;
@@ -27,7 +27,7 @@ public class ScheduleService {
 
   private final StoreRepository storeRepository;
 
-  private final DayClassRepository dayClassRepository;
+  private final DayClassSearchRepository dayClassSearchRepository;
 
   private final DayClassSchedulerRepository dayClassSchedulerRepository;
 
@@ -67,10 +67,11 @@ public class ScheduleService {
     DayClassScheduler dayClassScheduler = dayClassSchedulerRepository.findById(dayClassSchedulerId)
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS_SCHEDULER));
 
-    DayClass dayClass = dayClassRepository.findById(dayClassScheduler.getDayClass().getId())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
+    DayClassDocument dayClassDocument =
+        dayClassSearchRepository.findById(dayClassScheduler.getDayClassId())
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    if (dayClass.getStore().getId() != store.getId()) {
+    if (dayClassDocument.getStoreId() != store.getId()) {
       throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
     }
 
@@ -91,10 +92,11 @@ public class ScheduleService {
         dayClassSchedulerRepository.findById(schedule.getDayClassScheduler().getId())
             .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS_SCHEDULER));
 
-    DayClass dayClass = dayClassRepository.findById(dayClassScheduler.getDayClass().getId())
-        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
+    DayClassDocument dayClassDocument =
+        dayClassSearchRepository.findById(dayClassScheduler.getDayClassId())
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    if (dayClass.getStore().getId() != store.getId()) {
+    if (dayClassDocument.getStoreId() != store.getId()) {
       throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
     }
 

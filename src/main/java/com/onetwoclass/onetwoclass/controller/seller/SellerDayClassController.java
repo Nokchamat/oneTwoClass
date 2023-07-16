@@ -59,5 +59,4 @@ public class SellerDayClassController {
     return ResponseEntity.ok("데이클래스 삭제가 완료되었습니다.");
   }
 
-
 }

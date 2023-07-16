@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateDayClassForm {
 
-  @NotNull(message = "변경 대상의 이름을 기재해주세요.")
-  private String dayClassName;
+  @NotNull(message = "변경할 DayClassId를 기재해주세요.")
+  private String dayClassId;
 
   @Size(min = 1, max = 20)
   private String toChangeDayClassName;

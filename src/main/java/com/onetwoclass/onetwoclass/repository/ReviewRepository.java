@@ -13,6 +13,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
   Optional<Review> findByScheduleId(Long scheduleId);
   Page<Review> findAllByCustomerId(Long id, Pageable pageable);
-  Page<Review> findAllByDayClassId(Long id, Pageable pageable);
-  List<Review> findAllByDayClassId(Long id);
+  Page<Review> findAllByDayClassId(String id, Pageable pageable);
+  List<Review> findAllByDayClassId(String id);
 }

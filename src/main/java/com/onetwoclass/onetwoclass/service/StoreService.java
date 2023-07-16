@@ -7,7 +7,7 @@ import com.onetwoclass.onetwoclass.domain.form.store.AddStoreForm;
 import com.onetwoclass.onetwoclass.domain.form.store.UpdateStoreForm;
 import com.onetwoclass.onetwoclass.exception.CustomException;
 import com.onetwoclass.onetwoclass.exception.ErrorCode;
-import com.onetwoclass.onetwoclass.repository.DayClassRepository;
+import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class StoreService {
 
   private final StoreRepository storeRepository;
 
-  private final DayClassRepository dayClassRepository;
+  private final DayClassSearchRepository dayClassSearchRepository;
 
   @Transactional
   public void addStore(AddStoreForm addStoreForm, Member seller) {
@@ -60,7 +60,7 @@ public class StoreService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    if (!dayClassRepository.findAllByStoreId(store.getId()).isEmpty()) {
+    if (!dayClassSearchRepository.findAllByStoreId(store.getId()).isEmpty()) {
       throw new CustomException(ErrorCode.PLEASE_DELETE_DAYCLASS_FIRST);
     }
 
