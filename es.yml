@@ -2,7 +2,7 @@ version: '3.7'
 services:
   es:
     build:
-      context: "Dockerfile"
+      context: "Dockerfile-nori"
       args:
         ELK_VERSION: 7.15.2
     container_name: es
