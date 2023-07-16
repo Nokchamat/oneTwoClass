@@ -43,7 +43,7 @@
 - [x] 리뷰 작성, 조회
 
 ### 가게 - 클래스
-- [ ] 리뷰 평균 별점
+- [x] 리뷰 평균 별점
 
 ## ERD
 <img width="1417" alt="image" src="https://github.com/Nokchamat/oneTwoClass/assets/107979129/6f7ae905-dfa7-49a4-9f45-a4fa347e9278">
