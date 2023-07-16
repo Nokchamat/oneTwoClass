@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DayClassSearchRepository extends ElasticsearchRepository<DayClassDocument, String> {
 
-  Page<DayClassDocument> findAllByDayClassNameText(String dayClassName, Pageable pageable);
+  Page<DayClassDocument> findAllByDayClassName(String dayClassNameText, Pageable pageable);
 
   Page<DayClassDocument> findAllByStoreId(Long storeId, Pageable pageable);
   List<DayClassDocument> findAllByStoreId(Long storeId);
 
+  List<DayClassDocument> findAllByDayClassNameAndStoreId(String dayClassName, Long storeId);
 }

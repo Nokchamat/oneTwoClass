@@ -1,6 +1,5 @@
 server:
   port: 8081
-
 spring:
   redis:
     port: 6379
@@ -15,9 +14,6 @@ spring:
       ddl-auto: create
 
     database: h2
-
-  elasticsearch:
-    uris: http://localhost:32880
 
 jwt:
   secret: "secretKey"

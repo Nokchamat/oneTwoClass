@@ -1,8 +1,14 @@
 {
   "properties": {
-    "dayClassNameText": {
+    "dayClassName": {
       "type": "text",
-      "analyzer": "my_nori_analyzer"
+      "fields": {
+        "nori_mixed": {
+          "type": "text",
+          "analyzer": "my_nori_analyzer",
+          "search_analyzer": "standard"
+        }
+      }
     }
   }
 }

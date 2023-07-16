@@ -78,4 +78,6 @@ DayClass 생성 시와 수정 시에 데이클래스 이름 중복을 필터링�
           DayClassDocument.class,
           IndexCoordinates.of("dayclass"));
       }
+- dayClassName 필드를 두개 가지고 있는 것은 낭비라고 생각되어 storeId와 dayClassName으로 매칭되는 것을
+List로 가져오고 이후 contains로 확인하는 방식으로 리팩토링함 
 

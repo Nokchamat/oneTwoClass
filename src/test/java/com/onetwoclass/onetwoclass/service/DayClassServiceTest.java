@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.onetwoclass.onetwoclass.config.ContainerExtension;
+import com.onetwoclass.onetwoclass.config.elasticsearch.ElasticTestContainer;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.dto.DayClassDto;
@@ -19,17 +19,18 @@ import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.MemberRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchHits;
 
 @SpringBootTest
-@ExtendWith(ContainerExtension.class)
+@Import(ElasticTestContainer.class)
 class DayClassServiceTest {
 
   @Autowired
@@ -78,7 +79,7 @@ class DayClassServiceTest {
 
     //then
     assertEquals(dayClassDocument.getExplains(), addDayClassForm.getExplains());
-    assertEquals(dayClassDocument.getDayClassNameKeyword(), addDayClassForm.getDayClassName());
+    assertEquals(dayClassDocument.getDayClassName(), addDayClassForm.getDayClassName());
     assertEquals(dayClassDocument.getPrice(), addDayClassForm.getPrice());
 
   }
@@ -140,8 +141,7 @@ class DayClassServiceTest {
         .build());
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameKeyword("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
@@ -149,8 +149,7 @@ class DayClassServiceTest {
 
     dayClassSearchRepository.save(DayClassDocument.builder()
         .id(dayClassDocument.getId())
-        .dayClassNameText("마카롱 클래스")
-        .dayClassNameKeyword("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
@@ -172,7 +171,7 @@ class DayClassServiceTest {
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
     //then
-    assertEquals(updatedDayClass.getDayClassNameKeyword(),
+    assertEquals(updatedDayClass.getDayClassName(),
         updateDayClassForm.getToChangeDayClassName());
     assertEquals(updatedDayClass.getExplains(), updateDayClassForm.getToChangeExplains());
     assertEquals(updatedDayClass.getPrice(), updateDayClassForm.getToChangePrice());
@@ -199,8 +198,7 @@ class DayClassServiceTest {
         .build());
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
@@ -242,8 +240,7 @@ class DayClassServiceTest {
         .build());
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
@@ -285,16 +282,14 @@ class DayClassServiceTest {
         .build());
 
     DayClassDocument dayClassDocument1 = dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
         .build());
 
     DayClassDocument dayClassDocument2 = dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("빵 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
@@ -328,8 +323,7 @@ class DayClassServiceTest {
         .build());
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .storeId(store.getId())
@@ -341,11 +335,11 @@ class DayClassServiceTest {
     //when
     dayClassService.deleteDayClass(deleteDayClassForm, seller);
 
-    SearchHits<DayClassDocument> dayClassDocumentSearchHits =
-        dayClassService.findByStoreIdAndDayClassNameKeyword(store.getId(), "마카롱 클래스");
+    List<DayClassDocument> dayClassDocumentList =
+        dayClassSearchRepository.findAllByDayClassNameAndStoreId("마카롱 클래스", store.getId());
 
     //then
-    assertTrue(dayClassDocumentSearchHits.isEmpty());
+    assertTrue(dayClassDocumentList.isEmpty());
   }
 
   @Test
@@ -353,15 +347,13 @@ class DayClassServiceTest {
   void success_getAllDayClass() {
     //given
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .build());
 
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("마카롱 클래스")
-        .dayClassNameText("마카롱 클래스")
+        .dayClassName("마카롱 클래스")
         .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
         .price(5000)
         .build());
@@ -380,15 +372,13 @@ class DayClassServiceTest {
   void success_getAllDayClassByDayClassName() {
     //given
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameText("데이클래스 가져오기 테스트1")
-        .dayClassNameKeyword("데이클래스 가져오기 테스트1")
+        .dayClassName("테스트1")
         .explains("success_getAllDayClassByDayClassName")
         .price(5000)
         .build());
 
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameKeyword("데이클래스 가져오기 테스트2")
-        .dayClassNameText("데이클래스 가져오기 테스트2")
+        .dayClassName("테스트2")
         .explains("success_getAllDayClassByDayClassName")
         .price(5000)
         .build());
@@ -396,11 +386,10 @@ class DayClassServiceTest {
     //when
     Page<DayClassDto> dayClassDtoList =
         dayClassService.getAllDayClassByDayClassNameFromElasticsearch(
-            "데이클래스 가져오기 테스트", Pageable.unpaged());
+            "테스트", Pageable.unpaged());
 
     //then
     assertEquals(dayClassDtoList.getTotalElements(), 2);
-
     assertEquals(dayClassDtoList.getContent().get(0).getExplains(),
         "success_getAllDayClassByDayClassName");
     assertEquals(dayClassDtoList.getContent().get(1).getExplains(),
@@ -419,16 +408,14 @@ class DayClassServiceTest {
         .build());
 
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameText("success_getAllDayClassByStoreId1")
-        .dayClassNameKeyword("success_getAllDayClassByStoreId1")
+        .dayClassName("success_getAllDayClassByStoreId1")
         .explains("success_getAllDayClassByStoreId")
         .price(5000)
         .storeId(store.getId())
         .build());
 
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameText("success_getAllDayClassByStoreId2")
-        .dayClassNameKeyword("success_getAllDayClassByStoreId2")
+        .dayClassName("success_getAllDayClassByStoreId2")
         .explains("success_getAllDayClassByStoreId")
         .price(5000)
         .storeId(store.getId())

@@ -18,6 +18,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.MultiField;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
 @AllArgsConstructor
@@ -35,10 +36,7 @@ public class DayClassDocument {
   private String id;
 
   @Field(type = FieldType.Text)
-  private String dayClassNameText;
-
-  @Field(type = FieldType.Keyword)
-  private String dayClassNameKeyword;
+  private String dayClassName;
 
   @Lob
   @Field(type = FieldType.Keyword)
@@ -59,8 +57,7 @@ public class DayClassDocument {
   public void updateDayClass(UpdateDayClassForm updateDayClassForm) {
 
     if (updateDayClassForm.getToChangeDayClassName() != null) {
-      this.dayClassNameText = updateDayClassForm.getToChangeDayClassName();
-      this.dayClassNameKeyword = updateDayClassForm.getToChangeDayClassName();
+      this.dayClassName = updateDayClassForm.getToChangeDayClassName();
     }
 
     if (updateDayClassForm.getToChangePrice() != null) {
@@ -78,7 +75,7 @@ public class DayClassDocument {
   public static DayClassDto toDayClassDto(DayClassDocument dayClassDocument) {
     return DayClassDto.builder()
         .dayClassId(dayClassDocument.getId())
-        .dayClassName(dayClassDocument.getDayClassNameText())
+        .dayClassName(dayClassDocument.getDayClassName())
         .explains(dayClassDocument.getExplains())
         .price(dayClassDocument.getPrice())
         .registeredAt(dayClassDocument.getRegisteredAt())

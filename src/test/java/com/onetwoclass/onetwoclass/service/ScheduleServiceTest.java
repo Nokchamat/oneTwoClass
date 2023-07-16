@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.onetwoclass.onetwoclass.config.elasticsearch.ElasticTestContainer;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.dto.ScheduleDto;
@@ -27,9 +28,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
+@Import(ElasticTestContainer.class)
 class ScheduleServiceTest {
 
   @Autowired
@@ -79,8 +82,7 @@ class ScheduleServiceTest {
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(
         DayClassDocument.builder()
-            .dayClassNameKeyword("빵 클래스")
-            .dayClassNameText("빵 클래스")
+            .dayClassName("빵 클래스")
             .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
             .price(5000)
             .storeId(store.getId())
@@ -139,8 +141,7 @@ class ScheduleServiceTest {
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(
         DayClassDocument.builder()
-            .dayClassNameKeyword("빵 클래스")
-            .dayClassNameText("빵 클래스")
+            .dayClassName("빵 클래스")
             .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
             .price(5000)
             .storeId(store.getId())
@@ -196,8 +197,7 @@ class ScheduleServiceTest {
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(
         DayClassDocument.builder()
-            .dayClassNameKeyword("빵 클래스")
-            .dayClassNameText("빵 클래스")
+            .dayClassName("빵 클래스")
             .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
             .price(5000)
             .storeId(store.getId())
@@ -275,8 +275,7 @@ class ScheduleServiceTest {
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(
         DayClassDocument.builder()
-            .dayClassNameKeyword("빵 클래스")
-            .dayClassNameText("빵 클래스")
+            .dayClassName("빵 클래스")
             .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
             .price(5000)
             .storeId(store.getId())
@@ -340,8 +339,7 @@ class ScheduleServiceTest {
 
     DayClassDocument dayClassDocument = dayClassSearchRepository.save(
         DayClassDocument.builder()
-            .dayClassNameKeyword("빵 클래스")
-            .dayClassNameText("빵 클래스")
+            .dayClassName("빵 클래스")
             .explains("여러 마카롱을 맛볼 수 있고 만들어요 !")
             .price(5000)
             .storeId(store.getId())
