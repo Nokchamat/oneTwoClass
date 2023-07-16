@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.onetwoclass.onetwoclass.config.elasticsearch.ElasticTestContainer;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.dto.StoreDto;
@@ -20,9 +21,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
+@Import(ElasticTestContainer.class)
 class StoreServiceTest {
 
   @Autowired

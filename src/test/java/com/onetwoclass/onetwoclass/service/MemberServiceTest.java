@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.onetwoclass.onetwoclass.config.elasticsearch.ElasticTestContainer;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.entity.Member;
 import com.onetwoclass.onetwoclass.domain.form.sign.SignInForm;
@@ -16,9 +17,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootTest
+@Import(ElasticTestContainer.class)
 class MemberServiceTest {
 
   @Autowired

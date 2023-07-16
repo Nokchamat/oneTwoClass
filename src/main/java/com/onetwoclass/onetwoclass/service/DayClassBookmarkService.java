@@ -67,7 +67,7 @@ public class DayClassBookmarkService {
           dayClassBookmarkDto.setDayClassName(
               dayClassSearchRepository.findById(dayClassBookmarkDto.getDayClassId())
                   .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS))
-                  .getDayClassNameText());
+                  .getDayClassName());
 
           return dayClassBookmarkDto;
         });

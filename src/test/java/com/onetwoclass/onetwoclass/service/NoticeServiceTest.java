@@ -2,6 +2,7 @@ package com.onetwoclass.onetwoclass.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.onetwoclass.onetwoclass.config.elasticsearch.ElasticTestContainer;
 import com.onetwoclass.onetwoclass.domain.constants.Category;
 import com.onetwoclass.onetwoclass.domain.constants.Role;
 import com.onetwoclass.onetwoclass.domain.dto.NoticeDto;
@@ -21,10 +22,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
+@Import(ElasticTestContainer.class)
 class NoticeServiceTest {
 
   @Autowired
@@ -271,9 +274,6 @@ class NoticeServiceTest {
 
     Page<NoticeDto> noticeDtoList2 =
         noticeService.getNoticeByStoreId(Pageable.unpaged(), store2.getId());
-
-
-
 
     //then
     assertEquals(noticeDtoList1.getTotalElements(), 2);

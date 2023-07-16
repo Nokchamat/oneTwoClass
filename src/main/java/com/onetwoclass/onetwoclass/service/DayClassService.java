@@ -12,10 +12,13 @@ import com.onetwoclass.onetwoclass.exception.ErrorCode;
 import com.onetwoclass.onetwoclass.repository.DayClassSearchRepository;
 import com.onetwoclass.onetwoclass.repository.StoreRepository;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,14 +37,16 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassSearchRepository
-        .findByStoreIdAndDayClassNameKeyword(store.getId(), addDayClassForm.getDayClassName())
-        .ifPresent(d -> {
+        if (dayClassSearchRepository.findAllByDayClassNameAndStoreId(
+            addDayClassForm.getDayClassName(), store.getId())
+            .stream().map(DayClassDocument::getDayClassName)
+            .collect(Collectors.toList()).contains(addDayClassForm.getDayClassName())){
+
           throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
-        });
+        }
 
     dayClassSearchRepository.save(DayClassDocument.builder()
-        .dayClassNameText(addDayClassForm.getDayClassName())
+        .dayClassName(addDayClassForm.getDayClassName())
         .explains(addDayClassForm.getExplains())
         .price(addDayClassForm.getPrice())
         .storeId(store.getId())
@@ -58,23 +63,25 @@ public class DayClassService {
     Store store = storeRepository.findBySellerId(seller.getId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STORE));
 
-    dayClassSearchRepository.findByStoreIdAndDayClassNameKeyword(
-            store.getId(), updateDayClassForm.getToChangeDayClassName())
-        .ifPresent(a -> {
-          throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
-        });
+    if (dayClassSearchRepository.findAllByDayClassNameAndStoreId(
+            updateDayClassForm.getToChangeDayClassName(), store.getId())
+        .stream().map(DayClassDocument::getDayClassName)
+        .collect(Collectors.toList()).contains(updateDayClassForm.getToChangeDayClassName())){
 
-    DayClassDocument dayClassDocument = dayClassSearchRepository
+      throw new CustomException(ErrorCode.DUPLICATION_DAYCLASS_NAME);
+    }
+
+    DayClassDocument updateDayClassDocument = dayClassSearchRepository
         .findById(updateDayClassForm.getDayClassId())
         .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DAYCLASS));
 
-    if (dayClassDocument.getStoreId() != store.getId()) {
+    if (updateDayClassDocument.getStoreId() != store.getId()) {
       throw new CustomException(ErrorCode.MISMATCHED_SELLER_AND_DAYCLASS);
     }
 
-    dayClassDocument.updateDayClass(updateDayClassForm);
+    updateDayClassDocument.updateDayClass(updateDayClassForm);
 
-    dayClassSearchRepository.save(dayClassDocument);
+    dayClassSearchRepository.save(updateDayClassDocument);
 
   }
 
@@ -121,7 +128,7 @@ public class DayClassService {
   public Page<DayClassDto> getAllDayClassByDayClassNameFromElasticsearch(String dayClassname,
       Pageable pageable) {
 
-    return dayClassSearchRepository.findAllByDayClassNameText(dayClassname, pageable)
+    return dayClassSearchRepository.findAllByDayClassName(dayClassname, pageable)
         .map(dayClass -> {
           DayClassDto dayClassDto = DayClassDocument.toDayClassDto(dayClass);
           dayClassDto.setStar(reviewService.getDayClassStarScore(dayClassDto.getDayClassId()));
