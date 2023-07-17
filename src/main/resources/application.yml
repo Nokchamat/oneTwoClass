@@ -12,6 +12,7 @@ spring:
     password: 1234
     url: jdbc:mysql://mysql-container:3306/onetwoclass?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
   jpa:
+    database: mysql
     show-sql: true
     hibernate:
       ddl-auto: update
