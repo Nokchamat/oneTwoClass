@@ -1,8 +1,9 @@
 version: '3.7'
 services:
-  app:
+
+  application:
     build:
-      context: .Dockerfile
+      context: .
     ports:
       - "8080:8080"
     depends_on:
@@ -16,9 +17,8 @@ services:
     container_name: mysql-container
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD= 1234
-      - MYSQL_DATABASE=onetwoclass
-
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE : onetwoclass
     ports:
       - "3306:3306"
     networks:
@@ -34,7 +34,7 @@ services:
 
   es:
     build:
-      context: .Dockerfile-nori
+      context: nori/.
       args:
         ELK_VERSION: 7.15.2
     container_name: es
